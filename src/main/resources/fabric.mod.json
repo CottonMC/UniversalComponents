@@ -1,26 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "starter",
+  "id": "commoncomponents",
   "version": "${version}",
 
-  "name": "Fabric Starter",
-  "icon": "assets/starter/icon.png",
-  "description": "Template for starting out Fabric mods",
+  "name": "Common Components",
+  "icon": "assets/commoncomponents/icon.png",
+  "description": "Common components for integration",
   "license": "MIT",
   "contact": {
-    "sources": "https://github.com/CottonMC/FabricStarter"
+    "sources": "https://github.com/CottonMC/CommonComponents"
   },
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.cottonmc.starter.FabricStarter"
+      "io.github.cottonmc.component.CommonComponents"
     ]
   },
   "mixins": [
-    "mixins.starter.json"
+    "mixins.comcop.json"
   ],
   "depends": {
-    "fabricloader": ">=0.4.0"
+    "fabricloader": ">=0.4.0",
+    "cardinal-components-base": "*"
   },
   "custom": {
     "modmenu:api": true
