@@ -1,4 +1,4 @@
-package io.github.cottonmc.component.item.impl;
+package io.github.cottonmc.component.compat.vanilla;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;

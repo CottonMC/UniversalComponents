@@ -1,23 +1,20 @@
-package io.github.cottonmc.component.item.impl;
+package io.github.cottonmc.component.compat.vanilla;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
-import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.math.Direction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class WrappedSidedInvComponent implements InventoryComponent {
-	private SidedInventory inv;
-	private Direction side;
+public class WrappedInvComponent implements InventoryComponent {
+	private Inventory inv;
 
-	public WrappedSidedInvComponent(SidedInventory inv, Direction side) {
+	public WrappedInvComponent(Inventory inv) {
 		this.inv = inv;
-		this.side = side;
 	}
 
 	@Override
@@ -27,33 +24,26 @@ public class WrappedSidedInvComponent implements InventoryComponent {
 
 	@Override
 	public List<ItemStack> getStacks() {
-		int[] slots = inv.getInvAvailableSlots(side);
-		List<ItemStack> stacks = DefaultedList.ofSize(inv.getInvSize(), ItemStack.EMPTY);
-		for (int slot : slots) {
-			stacks.set(slot, inv.getInvStack(slot));
+		List<ItemStack> ret = new ArrayList<>();
+		for (int i = 0; i < inv.getInvSize(); i++) {
+			ret.add(inv.getInvStack(i).copy());
 		}
-		return stacks;
+		return ret;
 	}
 
 	@Override
 	public ItemStack getStack(int slot) {
-		int[] slots = inv.getInvAvailableSlots(side);
-		for (int invSlot : slots) {
-			if (slot == invSlot) {
-				return inv.getInvStack(slot);
-			}
-		}
-		return ItemStack.EMPTY;
+		return inv.getInvStack(slot).copy();
 	}
 
 	@Override
 	public boolean canInsert(int slot) {
-		return inv.canInsertInvStack(slot, ItemStack.EMPTY, side); //TODO: better solution?
+		return true;
 	}
 
 	@Override
 	public boolean canExtract(int slot) {
-		return inv.canExtractInvStack(slot, ItemStack.EMPTY, side); //TODO: better solution?
+		return true;
 	}
 
 	@Override

@@ -25,7 +25,16 @@ repositories {
 	mavenCentral()
 	maven { url "http://maven.fabricmc.net/" } // Fabric maven - home of Fabric API and ModMenu
 	maven { url "http://server.bbkr.space:8081/artifactory/libs-release" } // Cotton maven - home of Cotton projects
-	maven { url "https://maven.onyxstudios.dev" } // NerdHub maven - home of Cardinal Components
+	maven { url "https://maven.onyxstudios.dev" } // Onyx Studios maven - home of Cardinal Components
+	maven { url "https://mod-buildcraft.com/maven" } // Buildcraft maven - home of Lib Block Attributes
+	maven {
+		url = "https://grondag-repo.appspot.com" //Grondag's maven - home of Fluidity
+		credentials {
+			username "guest"
+			password ""
+		}
+	}
+	maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -35,13 +44,24 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
+	//cardinal components
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
+
+	//lib block attributes
+	modImplementation "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
+
+	//fluidity
+	modImplementation ("grondag:fluidity-mc115:${project.fluidity_version}.+") { transitive = false }
+
+	//item inventory
+	modImplementation "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
+	include "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
 }
 
 processResources {

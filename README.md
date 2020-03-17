@@ -27,10 +27,11 @@ Watch this space!
 - [x] Inventory component
   - [x] Vanilla integration - vanilla to component
   - [x] Vanilla integration - component to vanilla
-  - [ ] Lib Block Attributes integration - attribute to component
-  - [ ] Lib Block Attributes integration - component to attribute
+  - [x] Lib Block Attributes integration - attribute to component
+  - [x] Lib Block Attributes integration - component to attribute
   - [ ] Fluidity integration - device to component
   - [ ] Fluidity integration - component to device
+  - [ ] Integration testing
 - [ ] Fluid component
   - [ ] Lib Block Attributes integration - attribute to component
   - [ ] Lib Block Attributes integration - component to attribute
@@ -38,6 +39,7 @@ Watch this space!
   - [ ] Fluidity integration - component to device
   - [ ] TechReborn integration - tank to component
   - [ ] TechReborn integration - component to tank
+  - [ ] Integration testing
 - [x] Data component
 
 ## Future Plans

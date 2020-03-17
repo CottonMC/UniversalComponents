@@ -1,8 +1,10 @@
 {
   "required": true,
   "package": "io.github.cottonmc.component.mixin",
+  "plugin": "io.github.cottonmc.component.plugin.CommonComponentsMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinBlock"
+    "MixinBlock",
+    "lba.MixinItemAttributes"
   ]
 }

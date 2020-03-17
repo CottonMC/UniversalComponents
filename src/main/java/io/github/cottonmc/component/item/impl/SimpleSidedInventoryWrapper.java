@@ -2,6 +2,7 @@ package io.github.cottonmc.component.item.impl;
 
 
 import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.block.BlockState;

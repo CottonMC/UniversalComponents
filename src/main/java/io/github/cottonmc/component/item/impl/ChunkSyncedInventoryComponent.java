@@ -8,11 +8,20 @@ import nerdhub.cardinal.components.api.util.sync.ChunkSyncedComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.chunk.Chunk;
 
+/**
+ * Synced inventory component for adding item storage onto a chunk.
+ */
 public class ChunkSyncedInventoryComponent extends SimpleInventoryComponent implements ChunkSyncedComponent<InventoryComponent> {
+	private ComponentType<InventoryComponent> type;
 	private Chunk chunk;
 
 	public ChunkSyncedInventoryComponent(int size, Chunk chunk) {
+		this(size, CommonComponents.INVENTORY_COMPONENT, chunk);
+	}
+
+	public ChunkSyncedInventoryComponent(int size, ComponentType<InventoryComponent> type, Chunk chunk) {
 		super(size);
+		this.type = type;
 		this.chunk = chunk;
 	}
 
@@ -57,6 +66,6 @@ public class ChunkSyncedInventoryComponent extends SimpleInventoryComponent impl
 
 	@Override
 	public ComponentType<InventoryComponent> getComponentType() {
-		return CommonComponents.INVENTORY_COMPONENT;
+		return type;
 	}
 }

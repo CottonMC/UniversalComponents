@@ -8,6 +8,9 @@ import net.minecraft.util.DefaultedList;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Basic implementation of an inventory component for adding onto a block.
+ */
 public class SimpleInventoryComponent implements InventoryComponent {
 	protected DefaultedList<ItemStack> stacks;
 
