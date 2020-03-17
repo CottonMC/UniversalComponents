@@ -1,6 +1,6 @@
 package io.github.cottonmc.component.item.impl;
 
-import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -16,7 +16,7 @@ public class EntitySyncedInventoryComponent extends SimpleInventoryComponent imp
 	private Entity entity;
 
 	public EntitySyncedInventoryComponent(int size, Entity entity) {
-		this(size, CommonComponents.INVENTORY_COMPONENT, entity);
+		this(size, UniversalComponents.INVENTORY_COMPONENT, entity);
 	}
 
 	public EntitySyncedInventoryComponent(int size, ComponentType<InventoryComponent> type, Entity entity) {

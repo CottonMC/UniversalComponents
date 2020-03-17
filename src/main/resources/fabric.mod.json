@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "id": "commoncomponents",
+  "id": "universalcomponents",
   "version": "${version}",
 
-  "name": "Common Components",
-  "icon": "assets/commoncomponents/icon.png",
+  "name": "Universal Components",
+  "icon": "assets/universalcomponents/icon.png",
   "description": "Common components for integration",
   "license": "MIT",
   "contact": {
-    "sources": "https://github.com/CottonMC/CommonComponents"
+    "sources": "https://github.com/CottonMC/UniversalComponents"
   },
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.cottonmc.component.CommonComponents"
+      "io.github.cottonmc.component.UniversalComponents"
     ]
   },
   "mixins": [
-    "mixins.comcop.json"
+    "mixins.unicomp.json"
   ],
   "depends": {
     "fabricloader": ">=0.4.0",

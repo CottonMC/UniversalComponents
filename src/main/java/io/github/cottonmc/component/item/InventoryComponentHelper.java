@@ -1,7 +1,7 @@
 package io.github.cottonmc.component.item;
 
 import dev.emi.iteminventory.api.ItemInventory;
-import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.compat.fluidity.FluidityInvHelper;
 import io.github.cottonmc.component.compat.iteminv.WrappedItemInventory;
 import io.github.cottonmc.component.compat.lba.LBAInvHelper;
@@ -32,7 +32,7 @@ public class InventoryComponentHelper {
 		BlockState state = world.getBlockState(pos);
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
 		//check for a full-fledged component
-		if (provider.hasComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, dir)) {
+		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
 			return true;
 		}
 		//no component, so check for vanilla inventories
@@ -69,8 +69,8 @@ public class InventoryComponentHelper {
 	public static InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		BlockState state = world.getBlockState(pos);
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
-		if (provider.hasComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, dir)) {
-			return provider.getComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, dir);
+		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
+			return provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
 		}
 		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
 		if (inv instanceof SidedInventory) {
@@ -110,7 +110,7 @@ public class InventoryComponentHelper {
 	 */
 	public static boolean hasInventoryComponent(ItemStack stack) {
 		//check for a full-fledged component
-		if (CommonComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) return true;
+		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) return true;
 		//no full component, so check for an ItemInventory
 		if (stack.getItem() instanceof ItemInventory) return true;
 		//no ItemInventory, so check for LBA item attributes
@@ -130,8 +130,8 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInventoryComponent(ItemStack stack) {
-		if (CommonComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) {
-			return CommonComponents.INVENTORY_COMPONENT.get(stack);
+		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) {
+			return UniversalComponents.INVENTORY_COMPONENT.get(stack);
 		}
 		if (stack.getItem() instanceof ItemInventory) {
 			return new WrappedItemInventory(stack, (ItemInventory)stack.getItem());

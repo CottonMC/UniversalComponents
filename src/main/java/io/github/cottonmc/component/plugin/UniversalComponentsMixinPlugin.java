@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CommonComponentsMixinPlugin implements IMixinConfigPlugin {
+public class UniversalComponentsMixinPlugin implements IMixinConfigPlugin {
 	public static final String PACKAGE = "io.github.cottonmc.component.mixin";
 
 	public static final Map<String, String> HOOKS;

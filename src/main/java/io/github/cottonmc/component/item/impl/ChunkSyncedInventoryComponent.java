@@ -1,6 +1,6 @@
 package io.github.cottonmc.component.item.impl;
 
-import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -16,7 +16,7 @@ public class ChunkSyncedInventoryComponent extends SimpleInventoryComponent impl
 	private Chunk chunk;
 
 	public ChunkSyncedInventoryComponent(int size, Chunk chunk) {
-		this(size, CommonComponents.INVENTORY_COMPONENT, chunk);
+		this(size, UniversalComponents.INVENTORY_COMPONENT, chunk);
 	}
 
 	public ChunkSyncedInventoryComponent(int size, ComponentType<InventoryComponent> type, Chunk chunk) {

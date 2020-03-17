@@ -1,7 +1,7 @@
 package io.github.cottonmc.component.item.impl;
 
 
-import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
@@ -26,6 +26,6 @@ public class SimpleSidedInventoryWrapper implements SidedInventoryWrapper {
 	@Nullable
 	@Override
 	public InventoryComponent getComponent(@Nullable Direction dir) {
-		return provider.getComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, dir);
+		return provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
 	}
 }

@@ -6,7 +6,7 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper;
-import io.github.cottonmc.component.CommonComponents;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
@@ -38,8 +38,8 @@ public class MixinItemAttributes {
 			BlockComponentProvider componentProvider = BlockComponentProvider.get(block);
 			SidedInventory sidedInv;
 			FixedItemInv wrapper;
-			if (componentProvider.hasComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, blockSide)) {
-				InventoryComponent component = componentProvider.getComponent(world, pos, CommonComponents.INVENTORY_COMPONENT, blockSide);
+			if (componentProvider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide)) {
+				InventoryComponent component = componentProvider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide);
 				list.add(convertor.apply(new AttributeWrapper(component)));
 			} else if (block instanceof InventoryProvider) {
 				InventoryProvider provider = (InventoryProvider)block;

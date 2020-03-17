@@ -9,8 +9,8 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class CommonComponents implements ModInitializer {
-	public static final String MODID = "commoncomponents";
+public class UniversalComponents implements ModInitializer {
+	public static final String MODID = "universalcomponents";
 
 	public static final Logger logger = LogManager.getLogger();
 
@@ -19,6 +19,9 @@ public class CommonComponents implements ModInitializer {
 	 */
 	public static final ComponentType<InventoryComponent> INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "inventory"), InventoryComponent.class);
 
+	/**
+	 * A component for providing structured data, for use with automation or HUDs.
+	 */
 	public static final ComponentType<DataProviderComponent> DATA_PROVIDER_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "data_provider"), DataProviderComponent.class);
 
 	@Override
