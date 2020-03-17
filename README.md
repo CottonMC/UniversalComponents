@@ -13,7 +13,7 @@ Common Components provides components on the [Cardinal Components](https://githu
 
 ## Inventories
 
-`InventoryComponent`, registered as `CommonComponents.INVENTORY_COMPONENT`, provides handling for ItemStacks, similar to a vanilla `Inventory`. It is based on a test/action system, so you can know the result of a modification without mutating the inventory.
+`InventoryComponent`, registered as `CommonComponents.INVENTORY_COMPONENT`, provides handling for ItemStacks, similar to a vanilla `Inventory`. It is based on a test/action system, so you can know the result of a modification without mutating the inventory. Inventory components can be attached on any component provider and interact with each other seamlessly, along with two-way interaction between components, vanilla inventories, and more.
 
 ## Fluids
 
@@ -21,7 +21,7 @@ Watch this space!
 
 ## Data
 
-`DataComponent`, registered as `CommonComponents.DATA_COMPONENT`, provides handling for structured read-only data usable for automation, HUD elements, and other purposes. It is based on [ProbeDataProvider](https://github.com/elytra/ProbeDataProvider) by Unascribed and Falkreon.
+`DataComponent`, registered as `CommonComponents.DATA_COMPONENT`, provides handling for structured read-only data usable for automation, HUD elements, and other purposes. It is based on [ProbeDataProvider](https://github.com/elytra/ProbeDataProvider) by Unascribed and Falkreon. Data is exposed as individual data elements, which can contain a text label, a double-based value bar, and a list of item stacks. Various types of resource bar are included by default inside the `UnitManager` class.
 
 ## Development
 - [x] Inventory component
@@ -34,17 +34,17 @@ Watch this space!
 - [ ] Fluid component
   - [ ] Lib Block Attributes integration - attribute to component
   - [ ] Lib Block Attributes integration - component to attribute
-  - [ ] TechReborn integration - tank to component
-  - [ ] TechReborn integration - component to tank
   - [ ] Fluidity integration - device to component
   - [ ] Fluidity integration - component to device
+  - [ ] TechReborn integration - tank to component
+  - [ ] TechReborn integration - component to tank
 - [x] Data component
 
 ## Future Plans
 
 There are plenty of other resources that many mods want to use but Fabric has no common handling for.
 
-Energy is the most obvious example, but also the biggest conundrum for integration. Energy has always had implementation splits for different scales or mechanics, and is at the biggest risk of value inflation arms races since it's not hard-bound to in-world vanilla resources. I haven't yet decided if I want to do anything energy-wise with Common Components, and if I do decide to add energy support, I'm not sure what form it would take. The potential forms it could take are 1) its own energy system, 2) automatic conversion between other energy systems, or 3) a combination of both. Time will tell what happens.
+Energy is the most obvious example, but also the biggest conundrum for integration. Energy has always had implementation splits for different scales or mechanics, and is at the biggest risk of value inflation arms races since it's not hard-bound to in-world vanilla resources. I haven't yet decided if I want to do anything energy-wise with Common Components, and if I do decide to add energy support, I'm not sure what form it would take. The potential forms it could take are 1) its own energy system, 2) automatic conversion between existing energy systems, or 3) a combination of both. Time will tell what happens.
 
 Other common integration points are temperature and magical energy like mana, but those neither of those really fit very well into the lib as their own components. Temperature is almost exclusively used as read-only, so it can be expressed in a data component, and mana is highly dependent on the mod providing the magic system, so the component should belong to the magic system.
 
