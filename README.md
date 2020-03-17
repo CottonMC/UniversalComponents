@@ -25,11 +25,17 @@ Watch this space!
 
 ## Roadmap
 - [x] Inventory component
-  - [x] Vanilla integration
-  - [ ] Lib Block Attributes integration
-  - [ ] Fluidity integration
+  - [x] Vanilla integration - vanilla to component
+  - [x] Vanilla integration - component to vanilla
+  - [ ] Lib Block Attributes integration - attribute to component
+  - [ ] Lib Block Attributes integration - component to attribute
+  - [ ] Fluidity integration - device to component
+  - [ ] Fluidity integration - component to device
 - [ ] Fluid component
-  - [ ] Lib Block Attributes integration
-  - [ ] TechReborn integration
-  - [ ] Fluidity integration
+  - [ ] Lib Block Attributes integration - attribute to component
+  - [ ] Lib Block Attributes integration - component to attribute
+  - [ ] TechReborn integration - tank to component
+  - [ ] TechReborn integration - component to tank
+  - [ ] Fluidity integration - device to component
+  - [ ] Fluidity integration - component to device
 - [x] Data component
