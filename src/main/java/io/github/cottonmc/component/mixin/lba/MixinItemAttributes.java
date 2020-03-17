@@ -29,7 +29,7 @@ import java.util.function.Function;
 public class MixinItemAttributes {
 
 	//TODO: better way to do this without replacing the whole thing?
-	@Inject(method = "createBlockAdder", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "createBlockAdder", at = @At("HEAD"), cancellable = true, remap = false)
 	private static <T> void injectComponentAdder(Function<FixedItemInv, T> convertor, CallbackInfoReturnable<CustomAttributeAdder<T>> info) {
 		info.setReturnValue((world, pos, state, list) -> {
 			Block block = state.getBlock();

@@ -2,6 +2,7 @@
 
 # Universal Components
 
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=http%3A%2F%2Fserver.bbkr.space%3A8081%2Fartifactory%2Flibs-release%2Fio%2Fgithub%2Fcottonmc%2FUniversalComponents%2Fmaven-metadata.xml)](http://server.bbkr.space:8081/artifactory/libs-release/io/github/cottonmc/UniversalComponents/)
 
 [>> Downloads <<](https://github.com/CottonMC/UniversalComponents/releases)
 
@@ -10,6 +11,23 @@
 **This mod is open source and under a permissive license.** As such, it can be included in any modpack on any platform without prior permission. We appreciate hearing about people using our mods, but you do not need to ask to use them. See the [LICENSE file](LICENSE) for more details.
 
 Universal Components provides components on the [Cardinal Components](https://github.com/OnyxStudios/Cardinal-Components-API) framework for various interactions that are frequently used for cross-mod integration. It's designed for compatibility and automatic integration with other providing systems, such as Vanilla's `InventoryProvider` system and AlexIIL's [Lib Block Attributes](https://github.com/AlexIIL/LibBlockAttributes).
+
+## Importing
+
+Universal Components is available on the Cotton maven. To import, add these to your `repositories` and `dependencies` blocks in your build.gradle:
+
+```groovy
+repositories {
+    url { "https://server.bbkr.space:8081/artifactory/libs-release" }
+}
+
+dependencies {
+    modImplementation "io.github.cottonmc:UniversalComponents:<VERSION>"
+    include "io.github.cottonmc:UniversalComponents:<VERSION>"
+}
+```
+
+This project depends on [Cardinal Components API](https://github.com/OnyxStudios/Cardinal-Components-API), but currently does not `include` it. This will change when the project reaches full release.
 
 ## Inventories
 
