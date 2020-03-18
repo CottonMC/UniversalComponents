@@ -1,12 +1,15 @@
 package io.github.cottonmc.component.item;
 
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.DefaultedList;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +37,12 @@ public interface InventoryComponent extends Component {
 	 */
 	//TODO: is it really worth doing a deep copy here? It's a lot more expensive and I'm not a hundred percent sure it's worth it
 	List<ItemStack> getStacks();
+
+	/**
+	 * DO NOT USE THIS FOR COMPONENT-TO-COMPONENT INTERACTION. ONLY EXISTS FOR INTEGRATION PURPOSES.
+	 * @return The mutable list of all item stacks in this inventory.
+	 */
+	DefaultedList<ItemStack> getMutableStacks();
 
 	/**
 	 * @param slot The slot to get the stack for.
@@ -165,6 +174,12 @@ public interface InventoryComponent extends Component {
 
 		return false;
 	}
+
+	default Inventory asInventory() {
+		return InventoryWrapper.of(this);
+	}
+
+	void markDirty();
 
 	@Override
 	default void fromTag(CompoundTag tag) {

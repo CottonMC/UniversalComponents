@@ -5,6 +5,7 @@ import io.github.cottonmc.component.item.InventoryComponent;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DefaultedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,11 @@ public class WrappedInvComponent implements InventoryComponent {
 			ret.add(inv.getInvStack(i).copy());
 		}
 		return ret;
+	}
+
+	@Override
+	public DefaultedList<ItemStack> getMutableStacks() {
+		throw new UnsupportedOperationException("getMutableStacks only exists for use in asInventory, it should never be called on a WrappedInvComponent!");
 	}
 
 	@Override
@@ -133,5 +139,15 @@ public class WrappedInvComponent implements InventoryComponent {
 	@Override
 	public boolean contains(Set<Item> items) {
 		return inv.containsAnyInInv(items);
+	}
+
+	@Override
+	public Inventory asInventory() {
+		return inv;
+	}
+
+	@Override
+	public void markDirty() {
+		inv.markDirty();
 	}
 }

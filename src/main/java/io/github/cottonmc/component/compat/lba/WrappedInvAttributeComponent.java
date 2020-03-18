@@ -5,11 +5,15 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.FixedItemInvView;
 import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DefaultedList;
 
 import java.util.*;
 
@@ -46,6 +50,11 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 		List<ItemStack> ret = new ArrayList<>();
 		stacks.forEach(stack -> ret.add(stack.copy()));
 		return ret;
+	}
+
+	@Override
+	public DefaultedList<ItemStack> getMutableStacks() {
+		throw new UnsupportedOperationException("getMutableStacks only exists for use in asInventory, it should never be called on a WrappedInvAttributeComponent!");
 	}
 
 	@Override
@@ -131,6 +140,21 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 			if (items.contains(stack.getItem())) return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Inventory asInventory() {
+		return new InventoryFixedWrapper(inv) {
+			@Override
+			public boolean canPlayerUseInv(PlayerEntity player) {
+				return true;
+			}
+		};
+	}
+
+	@Override
+	public void markDirty() {
+
 	}
 
 	private ItemFilter createFilterForSlot(int slot) {

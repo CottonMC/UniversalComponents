@@ -2,6 +2,7 @@ package io.github.cottonmc.component.compat.vanilla;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,11 @@ public class WrappedSidedInvComponent implements InventoryComponent {
 			stacks.set(slot, inv.getInvStack(slot));
 		}
 		return stacks;
+	}
+
+	@Override
+	public DefaultedList<ItemStack> getMutableStacks() {
+		throw new UnsupportedOperationException("getMutableStacks only exists for use in asInventory, it should never be called on a WrappedSidedInvComponent!");
 	}
 
 	@Override
@@ -143,5 +149,15 @@ public class WrappedSidedInvComponent implements InventoryComponent {
 	@Override
 	public boolean contains(Set<Item> items) {
 		return inv.containsAnyInInv(items);
+	}
+
+	@Override
+	public Inventory asInventory() {
+		return inv;
+	}
+
+	@Override
+	public void markDirty() {
+		inv.markDirty();
 	}
 }

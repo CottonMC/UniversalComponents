@@ -26,40 +26,6 @@ public class EntitySyncedInventoryComponent extends SimpleInventoryComponent imp
 	}
 
 	@Override
-	public ItemStack takeStack(int slot, int amount, ActionType action) {
-		ItemStack ret = super.takeStack(slot, amount, action);
-		if (action.shouldExecute()) sync();
-		return ret;
-	}
-
-	@Override
-	public ItemStack removeStack(int slot, ActionType action) {
-		ItemStack ret = super.removeStack(slot, action);
-		if (action.shouldExecute()) sync();
-		return ret;
-	}
-
-	@Override
-	public void setStack(int slot, ItemStack stack) {
-		super.setStack(slot, stack);
-		sync();
-	}
-
-	@Override
-	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
-		ItemStack ret = super.insertStack(slot, stack, action);
-		if (action.shouldExecute()) sync();
-		return ret;
-	}
-
-	@Override
-	public ItemStack insertStack(ItemStack stack, ActionType action) {
-		ItemStack ret = super.insertStack(stack, action);
-		if (action.shouldExecute()) sync();
-		return ret;
-	}
-
-	@Override
 	public Entity getEntity() {
 		return entity;
 	}

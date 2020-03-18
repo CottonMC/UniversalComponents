@@ -1,7 +1,7 @@
 package io.github.cottonmc.component.mixin;
 
 import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.item.impl.SimpleSidedInventoryWrapper;
+import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ public abstract class MixinBlock implements InventoryProvider {
 	public SidedInventory getInventory(BlockState state, IWorld world, BlockPos pos) {
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
 		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, null)) {
-			return new SimpleSidedInventoryWrapper(world, pos, state);
+			return SidedInventoryWrapper.of(side -> provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, side));
 		}
 		return null;
 	}
