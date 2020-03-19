@@ -11,16 +11,22 @@ import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.HopperBlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class InventoryComponentHelper {
+	public static final Predicate<Entity> HAS_COMPONENT = entity -> UniversalComponents.INVENTORY_COMPONENT.maybeGet(entity).isPresent();
+
 	/**
 	 * Query whether a block has a compatible inventory component.
 	 * @param world The world the block is in.
@@ -31,12 +37,14 @@ public class InventoryComponentHelper {
 	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		BlockState state = world.getBlockState(pos);
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
-		//check for a full-fledged component
+		//check for a full-fledged block component
 		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
 			return true;
 		}
-		//no component, so check for vanilla inventories
-		//TODO: this adds support for chest/hopper carts as well, do folks want that by default?
+		//no block component, so check for an entity component
+		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), InventoryComponentHelper.HAS_COMPONENT);
+		if (!list.isEmpty()) return true;
+		//no components, so check for vanilla inventories
 		if (HopperBlockEntity.getInventoryAt(world, pos) != null) return true;
 //		//no component, so check for an inventory provider
 //		if (block instanceof InventoryProvider) {
@@ -71,6 +79,10 @@ public class InventoryComponentHelper {
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
 		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
 			return provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
+		}
+		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), InventoryComponentHelper.HAS_COMPONENT);
+		if (!list.isEmpty()) {
+			return UniversalComponents.INVENTORY_COMPONENT.get(list.get(world.random.nextInt(list.size())));
 		}
 		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
 		if (inv instanceof SidedInventory) {

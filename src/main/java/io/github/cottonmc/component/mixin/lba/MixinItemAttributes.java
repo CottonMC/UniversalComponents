@@ -87,7 +87,7 @@ public class MixinItemAttributes {
 		});
 	}
 
-	@Inject(method = "appendItemAttributes", at = @At("HEAD"))
+	@Inject(method = "appendItemAttributes", at = @At("HEAD"), remap = false)
 	private static <T> void injectComponentAdder(Reference<ItemStack> ref, LimitedConsumer<ItemStack> access, ItemAttributeList<T> list, Function<FixedItemInv, T> convertor, CallbackInfo info) {
 		ItemStack stack = ref.get();
 		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) {
