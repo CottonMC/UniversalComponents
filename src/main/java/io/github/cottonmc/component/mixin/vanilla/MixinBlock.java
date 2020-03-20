@@ -20,7 +20,7 @@ public abstract class MixinBlock implements InventoryProvider {
 		BlockComponentProvider provider = BlockComponentProvider.get(state);
 		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, null)) {
 			InventoryComponent comp = provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, null);
-			if (comp.asInventory() instanceof SidedInventory) return (SidedInventory)comp.asInventory();
+			if (comp.asLocalInventory(world, pos) != null) return comp.asLocalInventory(world, pos);
 			return SidedInventoryWrapper.of(side -> provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, side));
 		}
 		return null;

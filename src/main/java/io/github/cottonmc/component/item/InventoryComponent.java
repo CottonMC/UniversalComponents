@@ -5,12 +5,16 @@ import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -175,10 +179,27 @@ public interface InventoryComponent extends Component {
 		return false;
 	}
 
+	/**
+	 * Represent this component as a vanilla {@link Inventory} for use in containers and world interaction.
+	 */
 	default Inventory asInventory() {
 		return InventoryWrapper.of(this);
 	}
 
+	/**
+	 * Represent this component as a vanilla {@link SidedInventory} for use with hoppers and sided world interaction. Only usable for block components.
+	 * @param world The world this component is in.
+	 * @param pos The position this component is at.
+	 * @return A sided inventory wrapper of this component, or null if it's not attached to a block or has no sided behavior.
+	 */
+	@Nullable
+	default SidedInventory asLocalInventory(IWorld world, BlockPos pos) {
+		return null;
+	}
+
+	/**
+	 * Mark this component as needing saving to the world or syncing to the client.
+	 */
 	void markDirty();
 
 	@Override
