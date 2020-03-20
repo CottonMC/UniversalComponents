@@ -1,31 +1,27 @@
 package io.github.cottonmc.component.item;
 
-import dev.emi.iteminventory.api.ItemInventory;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.compat.fluidity.FluidityInvHelper;
-import io.github.cottonmc.component.compat.iteminv.WrappedItemInventory;
-import io.github.cottonmc.component.compat.lba.LBAInvHelper;
-import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
-import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import io.github.cottonmc.component.compat.core.BlockComponentInvHook;
+import io.github.cottonmc.component.compat.core.EntityComponentInvHook;
+import io.github.cottonmc.component.compat.core.ItemComponentInvHook;
+import io.github.cottonmc.component.compat.fluidity.FluidityInvHook;
+import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
+import io.github.cottonmc.component.compat.lba.LBAInvHook;
+import io.github.cottonmc.component.compat.vanilla.VanillaInvHook;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.HopperBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class InventoryComponentHelper {
-	public static final Predicate<Entity> HAS_COMPONENT = entity -> UniversalComponents.INVENTORY_COMPONENT.maybeGet(entity).isPresent();
+
+	private static final List<BlockInventoryHook> BLOCK_HOOKS = new ArrayList<>();
+
+	private static final List<ItemInventoryHook> ITEM_HOOKS = new ArrayList<>();
 
 	/**
 	 * Query whether a block has a compatible inventory component.
@@ -35,34 +31,9 @@ public class InventoryComponentHelper {
 	 * @return Whether this block has an inventory we can access.
 	 */
 	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		BlockState state = world.getBlockState(pos);
-		BlockComponentProvider provider = BlockComponentProvider.get(state);
-		//check for a full-fledged block component
-		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
-			return true;
+		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			if (hook.hasComponent(world, pos, dir)) return true;
 		}
-		//no block component, so check for an entity component
-		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), InventoryComponentHelper.HAS_COMPONENT);
-		if (!list.isEmpty()) return true;
-		//no components, so check for vanilla inventories
-		if (HopperBlockEntity.getInventoryAt(world, pos) != null) return true;
-//		//no component, so check for an inventory provider
-//		if (block instanceof InventoryProvider) {
-//			if (((InventoryProvider)block).getInventory(state, world, pos) != null) return true;
-//		}
-//		//no inventory provider, so check for a block entity that implements Inventory
-//		if (block.hasBlockEntity()) {
-//			if (world.getBlockEntity(pos) instanceof Inventory) return true;
-//		}
-		//no block entity inventory, so check for LBA item attributes
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_items")) {
-			if (LBAInvHelper.hasInvAttribute(world, pos, dir)) return true;
-		}
-		//no LBA item attributes, so check for a Fluidity inv store
-		if (FabricLoader.getInstance().isModLoaded("fluidity")) {
-			if (FluidityInvHelper.hasInvStorage(world, pos, dir)) return true;
-		}
-		//nothing else to check, no inventory here
 		return false;
 	}
 
@@ -75,41 +46,8 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		BlockState state = world.getBlockState(pos);
-		BlockComponentProvider provider = BlockComponentProvider.get(state);
-		if (provider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir)) {
-			return provider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
-		}
-		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), InventoryComponentHelper.HAS_COMPONENT);
-		if (!list.isEmpty()) {
-			return UniversalComponents.INVENTORY_COMPONENT.get(list.get(world.random.nextInt(list.size())));
-		}
-		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
-		if (inv instanceof SidedInventory) {
-			return new WrappedSidedInvComponent((SidedInventory)inv, dir);
-		}
-		if (inv != null) {
-			return new WrappedInvComponent(inv);
-		}
-//		if (block instanceof InventoryProvider) {
-//			SidedInventory inv = ((InventoryProvider)block).getInventory(state, world, pos);
-//			if (inv != null) return new WrappedSidedInvComponent(inv, dir);
-//		}
-//		if (block.hasBlockEntity()) {
-//			BlockEntity be = world.getBlockEntity(pos);
-//			if (be instanceof SidedInventory) {
-//				return new WrappedSidedInvComponent((SidedInventory)be, dir);
-//			}
-//			if (be instanceof Inventory) {
-//				return new WrappedInvComponent((Inventory)be);
-//			}
-//		}
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_items")) {
-			InventoryComponent component = LBAInvHelper.getWrappedInvAttribute(world, pos, dir);
-			if (component != null) return component;
-		}
-		if (FabricLoader.getInstance().isModLoaded("fluidity")) {
-			InventoryComponent component = FluidityInvHelper.getWrappedInvStorage(world, pos, dir);
+		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			InventoryComponent component = hook.getComponent(world, pos, dir);
 			if (component != null) return component;
 		}
 		return null;
@@ -121,17 +59,9 @@ public class InventoryComponentHelper {
 	 * @return Whether a this stack has an inventory we can access.
 	 */
 	public static boolean hasInventoryComponent(ItemStack stack) {
-		//check for a full-fledged component
-		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) return true;
-		//no full component, so check for an ItemInventory
-		if (stack.getItem() instanceof ItemInventory) return true;
-		//no ItemInventory, so check for LBA item attributes
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_item")) {
-			if (LBAInvHelper.hasInvAttribute(stack)) return true;
+		for (ItemInventoryHook hook : ITEM_HOOKS) {
+			if (hook.hasComponent(stack)) return true;
 		}
-		//no LBA item attributes, so check for fluidity storage
-		if (FluidityInvHelper.hasInvStorage(stack)) return true;
-		//nothing else to check, no inventory here
 		return false;
 	}
 
@@ -142,22 +72,102 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInventoryComponent(ItemStack stack) {
-		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) {
-			return UniversalComponents.INVENTORY_COMPONENT.get(stack);
-		}
-		if (stack.getItem() instanceof ItemInventory) {
-			return new WrappedItemInventory(stack, (ItemInventory)stack.getItem());
-		}
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_item")) {
-			InventoryComponent component = LBAInvHelper.getWrappedInvAttribute(stack);
-			if (component != null) return component;
-		}
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_item")) {
-			InventoryComponent component = FluidityInvHelper.getWrappedInvStorage(stack);
+		for (ItemInventoryHook hook : ITEM_HOOKS) {
+			InventoryComponent component = hook.getComponent(stack);
 			if (component != null) return component;
 		}
 		return null;
 	}
 
+	/**
+	 * Add a new hook for accessing an inventory stored on a block or an entity at a given position.
+	 * @param hook The hook to add.
+	 */
+	public static void addBlockHook(BlockInventoryHook hook) {
+		BLOCK_HOOKS.add(hook);
+	}
+
+	/**
+	 * Add a new hook for accessing an inventory stored on an item stack.
+	 * @param hook The hook to add.
+	 */
+	public static void addItemHook(ItemInventoryHook hook) {
+		ITEM_HOOKS.add(hook);
+	}
+
 	private InventoryComponentHelper() { }
+
+	/**
+	 * Interface for accessing inventories in the world - either on a block, or on an entity at the given position.
+	 */
+	public interface BlockInventoryHook {
+		/**
+		 * Test for a compatible inventory in the world.
+		 * @param world The world to test in.
+		 * @param pos The position to test at.
+		 * @param dir The direction to test from, or null.
+		 * @return Whether a compatible inventory exists here.
+		 */
+		boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir);
+
+		/**
+		 * Get a compatible inventory in the world.
+		 * @param world The world to get in.
+		 * @param pos The position to get at.
+		 * @param dir The direction to get from, or null.
+		 * @return A wrapped form of a compatible inventory, or null if one doesn't exist.
+		 */
+		@Nullable
+		InventoryComponent getComponent(World world, BlockPos pos, @Nullable Direction dir);
+	}
+
+	/**
+	 * Interface for accessing inventories on item stacks.
+	 */
+	public interface ItemInventoryHook {
+		/**
+		 * Test for a compatible inventory on a stack.
+		 * @param stack The stack to test.
+		 * @return Whether the stack has a compatible inventory.
+		 */
+		boolean hasComponent(ItemStack stack);
+
+		/**
+		 * Get a compatible inventory on a stack.
+		 * @param stack The stack to get from.
+		 * @return A wrapped form of the compatible inventory, or null if one doesn't exist.
+		 */
+		@Nullable
+		InventoryComponent getComponent(ItemStack stack);
+	}
+
+	static {
+		//block components - first priority. since they're ours
+		if (FabricLoader.getInstance().isModLoaded("cardinal-components-block")) {
+			addBlockHook(BlockComponentInvHook.INSTANCE);
+		}
+		//entity components - second priority, since they're ours
+		if (FabricLoader.getInstance().isModLoaded("cardinal-components-entity")) {
+			addBlockHook(EntityComponentInvHook.INSTANCE);
+		}
+		//vanilla components - third priority, since it's the GCD for mods without explicit support
+		//TODO: should we maybe bump vanilla down to last priority so other mods can have their systems integrate better?
+		addBlockHook(VanillaInvHook.INSTANCE);
+		//item components - first priority for items
+		if (FabricLoader.getInstance().isModLoaded("cardinal-components-item")) {
+			addItemHook(ItemComponentInvHook.INSTANCE);
+		}
+		if (FabricLoader.getInstance().isModLoaded("iteminventory")) {
+			addItemHook(ItemInvHook.INSTANCE);
+		}
+		if (FabricLoader.getInstance().isModLoaded("libblockattributes_item")) {
+			addBlockHook(LBAInvHook.INSTANCE);
+			addItemHook(LBAInvHook.INSTANCE);
+		}
+		if (FabricLoader.getInstance().isModLoaded("fluidity")) {
+			addBlockHook(FluidityInvHook.INSTANCE);
+			addItemHook(FluidityInvHook.INSTANCE);
+		}
+		//TODO: Patchwork capabilities once it's out
+	}
 }

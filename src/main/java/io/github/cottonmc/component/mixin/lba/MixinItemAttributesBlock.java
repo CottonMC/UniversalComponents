@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.function.Function;
 
 @Mixin(ItemAttributes.class)
-public class MixinItemAttributes {
+public class MixinItemAttributesBlock {
 
 	//TODO: better way to do this without replacing the whole thing?
 	@Inject(method = "createBlockAdder", at = @At("HEAD"), cancellable = true, remap = false)
@@ -43,9 +43,11 @@ public class MixinItemAttributes {
 			BlockComponentProvider componentProvider = BlockComponentProvider.get(block);
 			SidedInventory sidedInv;
 			FixedItemInv wrapper;
+			//BEGIN INJECTION
 			if (componentProvider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide)) {
 				InventoryComponent component = componentProvider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide);
 				list.add(convertor.apply(new AttributeWrapper(component)));
+				//END INJECTION
 			} else if (block instanceof InventoryProvider) {
 				InventoryProvider provider = (InventoryProvider)block;
 				sidedInv = provider.getInventory(state, world, pos);
@@ -85,13 +87,5 @@ public class MixinItemAttributes {
 			}
 
 		});
-	}
-
-	@Inject(method = "appendItemAttributes", at = @At("HEAD"), remap = false)
-	private static <T> void injectComponentAdder(Reference<ItemStack> ref, LimitedConsumer<ItemStack> access, ItemAttributeList<T> list, Function<FixedItemInv, T> convertor, CallbackInfo info) {
-		ItemStack stack = ref.get();
-		if (UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent()) {
-			list.add(convertor.apply(new AttributeWrapper(UniversalComponents.INVENTORY_COMPONENT.get(stack))));
-		}
 	}
 }
