@@ -32,7 +32,7 @@ public class UniversalComponentsMixinPlugin implements IMixinConfigPlugin {
 		for (String name : HOOKS.keySet()) {
 			if (mixinClassName.equals(PACKAGE + "." + name)) {
 				for (String string : HOOKS.get(name)) {
-					if (!FabricLoader.getInstance().isModLoaded(name)) return false;
+					if (!FabricLoader.getInstance().isModLoaded(string)) return false;
 				}
 				return true;
 			}
