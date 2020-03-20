@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class LBAInvHook implements InventoryComponentHelper.BlockInventoryHook, InventoryComponentHelper.ItemInventoryHook {
+public class LBAInvHook implements InventoryComponentHelper.DualInventoryHook {
 	public static final LBAInvHook INSTANCE = new LBAInvHook();
 
 	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {

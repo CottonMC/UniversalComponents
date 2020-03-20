@@ -6,8 +6,12 @@ import io.github.cottonmc.component.compat.core.ItemComponentInvHook;
 import io.github.cottonmc.component.compat.fluidity.FluidityInvHook;
 import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
 import io.github.cottonmc.component.compat.lba.LBAInvHook;
-import io.github.cottonmc.component.compat.vanilla.VanillaInvHook;
-import net.fabricmc.loader.api.FabricLoader;
+import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
+import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
+import io.github.cottonmc.component.util.IntegrationHandler;
+import net.minecraft.block.entity.HopperBlockEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -31,10 +35,12 @@ public class InventoryComponentHelper {
 	 * @return Whether this block has an inventory we can access.
 	 */
 	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
 			if (hook.hasComponent(world, pos, dir)) return true;
 		}
-		return false;
+		//no special hooks, so fall back to vanilla
+		return HopperBlockEntity.getInventoryAt(world, pos) != null;
 	}
 
 	/**
@@ -46,9 +52,18 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
 			InventoryComponent component = hook.getComponent(world, pos, dir);
 			if (component != null) return component;
+		}
+		//no special hooks, so fall back to vanilla
+		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
+		if (inv instanceof SidedInventory) {
+			return new WrappedSidedInvComponent((SidedInventory)inv, dir);
+		}
+		if (inv != null) {
+			return new WrappedInvComponent(inv);
 		}
 		return null;
 	}
@@ -92,6 +107,15 @@ public class InventoryComponentHelper {
 	 * @param hook The hook to add.
 	 */
 	public static void addItemHook(ItemInventoryHook hook) {
+		ITEM_HOOKS.add(hook);
+	}
+
+	/**
+	 * Add a new hook for accessing both inventories stored on blocks or entities and on item stacks.
+	 * @param hook The hook to add.
+	 */
+	public static void addDualHook(DualInventoryHook hook) {
+		BLOCK_HOOKS.add(hook);
 		ITEM_HOOKS.add(hook);
 	}
 
@@ -141,33 +165,32 @@ public class InventoryComponentHelper {
 		InventoryComponent getComponent(ItemStack stack);
 	}
 
+	public interface DualInventoryHook extends BlockInventoryHook, ItemInventoryHook {
+
+	}
+
 	static {
-		//block components - first priority. since they're ours
-		if (FabricLoader.getInstance().isModLoaded("cardinal-components-block")) {
-			addBlockHook(BlockComponentInvHook.INSTANCE);
-		}
-		//entity components - second priority, since they're ours
-		if (FabricLoader.getInstance().isModLoaded("cardinal-components-entity")) {
-			addBlockHook(EntityComponentInvHook.INSTANCE);
-		}
-		//vanilla components - third priority, since it's the GCD for mods without explicit support
-		//TODO: should we maybe bump vanilla down to last priority so other mods can have their systems integrate better?
-		addBlockHook(VanillaInvHook.INSTANCE);
+		//block components - first priority for blocks, since they're ours
+		addBlockHook("cardinal-components-block", BlockComponentInvHook.INSTANCE);
+		//entity components - second priority for blocks, since they're ours
+		addBlockHook("cardinal-components-entity", EntityComponentInvHook.INSTANCE);
 		//item components - first priority for items
-		if (FabricLoader.getInstance().isModLoaded("cardinal-components-item")) {
-			addItemHook(ItemComponentInvHook.INSTANCE);
-		}
-		if (FabricLoader.getInstance().isModLoaded("iteminventory")) {
-			addItemHook(ItemInvHook.INSTANCE);
-		}
-		if (FabricLoader.getInstance().isModLoaded("libblockattributes_item")) {
-			addBlockHook(LBAInvHook.INSTANCE);
-			addItemHook(LBAInvHook.INSTANCE);
-		}
-		if (FabricLoader.getInstance().isModLoaded("fluidity")) {
-			addBlockHook(FluidityInvHook.INSTANCE);
-			addItemHook(FluidityInvHook.INSTANCE);
-		}
+		addItemHook("cardinal-components-item", ItemComponentInvHook.INSTANCE);
+		addItemHook("iteminventory", ItemInvHook.INSTANCE);
+		addDualHook("libblockattributes_item", LBAInvHook.INSTANCE);
+		addDualHook("fluidity", FluidityInvHook.INSTANCE);
 		//TODO: Patchwork capabilities once it's out
+	}
+
+	private static void addBlockHook(String modid, BlockInventoryHook hook) {
+		IntegrationHandler.runIfPresent(modid, () -> addBlockHook(hook));
+	}
+
+	private static void addItemHook(String modid, ItemInventoryHook hook) {
+		IntegrationHandler.runIfPresent(modid, () -> addItemHook(hook));
+	}
+
+	private static void addDualHook(String modid, DualInventoryHook hook) {
+		IntegrationHandler.runIfPresent(modid, () -> addDualHook(hook));
 	}
 }

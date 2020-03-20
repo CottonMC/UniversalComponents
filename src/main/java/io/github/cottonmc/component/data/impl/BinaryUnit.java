@@ -19,7 +19,6 @@ public class BinaryUnit extends SimpleUnit {
 		super(name, abbreviation);
 	}
 
-
 	private static final double KIBI = 1_024D;
 	private static final double MEBI = KIBI*1024D;
 	private static final double GIBI = MEBI*1024D;

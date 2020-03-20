@@ -11,7 +11,6 @@ public class SimpleUnit implements Unit {
 		FORMAT_STANDARD.setMaximumFractionDigits(2);
 	}
 
-
 	private final String name;
 	private final String abbreviation;
 	private final int barColor;

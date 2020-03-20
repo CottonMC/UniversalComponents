@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 //TODO: implement
-public class FluidityInvHook implements InventoryComponentHelper.BlockInventoryHook, InventoryComponentHelper.ItemInventoryHook {
+public class FluidityInvHook implements InventoryComponentHelper.DualInventoryHook {
 	public static final FluidityInvHook INSTANCE = new FluidityInvHook();
 
 	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {

@@ -46,7 +46,7 @@ import javax.annotation.Nonnull;
  * from frame to frame unless the bar actually refers to a new substance or quality (such as a different liquid in a
  * tank, or running out of one kind of power and switching to using a different one).
  *
- * <p>When creating custom bar units, make sure to register them with {@link UnitDictionary} on both the client and the
+ * <p>When creating custom bar units, make sure to register them with {@link UnitManager} on both the client and the
  * server, and give the unit a unique fullName. Feel free to use the static units declared in that class as well, either
  * directly, or as a model for how custom units should look.
  *
@@ -74,9 +74,9 @@ public interface DataElement {
 	 * Determines whether or not this DataElement contains textual information
 	 * @return true if a 
 	 */
-	public boolean hasLabel();
-	public boolean hasBar();
-	public boolean hasInventory();
+	boolean hasLabel();
+	boolean hasBar();
+	boolean hasInventory();
 
 	/**
 	 * Gets the label of this DataElement. This field is for unavoidably textual data, such as the custom name of an
@@ -84,28 +84,28 @@ public interface DataElement {
 	 * @return the textual label part of this DataElement
 	 */
 	@Nonnull
-	public Text getLabel();
+	Text getLabel();
 
 	/**
 	 * Gets the minimum quantity expressable on this DataElement's bar. If the current and minimum of the bar are the same,
 	 * the bar should be rendered "empty".
 	 * @return The lower bound for the bar's numeric values.
 	 */
-	public double getBarMinimum();
+	double getBarMinimum();
 
 	/**
 	 * Gets the current value to display on this DataElement's bar. This number must be between the bar's minimum and
 	 * maximum, inclusive.
 	 * @return The current numeric value of the bar.
 	 */
-	public double getBarCurrent();
+	double getBarCurrent();
 
 	/**
 	 * Gets the highest possible value expressable on this DataElement's bar. Often this is the total capacity of a fluid
 	 * or energy storage capability.
 	 * @return The upper bound for the bar's numeric values.
 	 */
-	public double getBarMaximum();
+	double getBarMaximum();
 
 	/**
 	 * Gets the abbreviated proper unit for this DataElement's bar. For example, something supplying 2200 Forge Units of
@@ -114,7 +114,7 @@ public interface DataElement {
 	 * @return The unit for the bar, or an empty String if there's no unit.
 	 */
 	@Nonnull
-	public Unit getBarUnit();
+	Unit getBarUnit();
 
 	/**
 	 * Gets any inventory associated with this DataElement. In the case where only a single itemslot is exposed, a probe
@@ -124,5 +124,5 @@ public interface DataElement {
 	 * depending on its configuration.
 	 */
 	@Nonnull
-	public ImmutableList<ItemStack> getInventory();
+	ImmutableList<ItemStack> getInventory();
 }
