@@ -33,8 +33,9 @@ public class UnitManager {
 	public static final Unit BYTES = new BinaryUnit("bytes", "B", 0x76FF03); //A400 light green
 
 	//Energy, eventually
-	public static final Unit WORK_UNITS = new SIUnit("work_units", "WU", 0x005A5A); //Dark electric blue
-	public static final Unit WU_PER_TICK = new SIUnit("wu_per_tick", "WU/t", 0x005A5A); //Also dark electric blue
+	//TODO: use custom #005A5A, Material A700 teal, or Material 800 teal?
+	public static final Unit WORK_UNITS = new SIUnit("work_units", "WU", 0x00BFA5); //A700 teal
+	public static final Unit WU_PER_TICK = new SIUnit("wu_per_tick", "WU/t", 0x00BFA5); //Also A700 teal
 	public static final Unit REBORN_ENERGY = new SIUnit("reborn_energy", "Energy", 0xD50000); //A700 red
 	public static final Unit RE_PER_TICK  = new SIUnit("re_per_tick", "E/t", 0xD50000); //Also A700 red
 
