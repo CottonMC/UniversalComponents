@@ -182,15 +182,15 @@ public class InventoryComponentHelper {
 		//TODO: Patchwork capabilities once it's out
 	}
 
-	private static void addBlockHook(String modid, BlockInventoryHook hook) {
-		IntegrationHandler.runIfPresent(modid, () -> addBlockHook(hook));
+	private static void addBlockHook(String targetMod, BlockInventoryHook hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addBlockHook(hook));
 	}
 
-	private static void addItemHook(String modid, ItemInventoryHook hook) {
-		IntegrationHandler.runIfPresent(modid, () -> addItemHook(hook));
+	private static void addItemHook(String targetMod, ItemInventoryHook hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addItemHook(hook));
 	}
 
-	private static void addDualHook(String modid, DualInventoryHook hook) {
-		IntegrationHandler.runIfPresent(modid, () -> addDualHook(hook));
+	private static void addDualHook(String targetMod, DualInventoryHook hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addDualHook(hook));
 	}
 }
