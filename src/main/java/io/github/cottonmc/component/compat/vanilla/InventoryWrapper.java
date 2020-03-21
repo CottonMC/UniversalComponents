@@ -107,7 +107,7 @@ public interface InventoryWrapper extends Inventory {
 
 	@Override
 	default void markDirty() {
-		getComponent().markDirty();
+		getComponent().onChanged();
 	}
 
 	@Override
