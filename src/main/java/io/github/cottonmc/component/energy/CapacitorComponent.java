@@ -2,8 +2,11 @@ package io.github.cottonmc.component.energy;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.Observable;
+import io.github.cottonmc.component.energy.event.PowerGenCallback;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import nerdhub.cardinal.components.api.component.Component;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -32,6 +35,19 @@ public interface CapacitorComponent extends Component, Observable {
 	 * @return the amount of leftover energy, or 0 if the insertion was completely successful.
 	 */
 	int insertEnergy(EnergyType type, int amount, ActionType action);
+
+	/**
+	 * Generate energy of the preferred type, firing a {@link PowerGenCallback}.
+	 * @param world The world this energy was generated in.
+	 * @param amount The amount of energy to generate.
+	 * @return The amount of energy that was not able to generate, or 0 if it was all generated successfully.
+	 */
+	//TODO: better way to do this than forcing to provide a world and pos?
+	default int generateEnergy(World world, BlockPos pos, int amount) {
+		int leftover = amount - insertEnergy(getPreferredType(), amount, ActionType.PERFORM);
+		PowerGenCallback.EVENT.invoker().generate(world, pos, getPreferredType(), amount - leftover);
+		return leftover;
+	}
 
 	/**
 	 * @return Whether energy can be extracted.
