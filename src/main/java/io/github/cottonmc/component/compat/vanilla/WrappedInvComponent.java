@@ -147,7 +147,12 @@ public class WrappedInvComponent implements InventoryComponent {
 	}
 
 	@Override
-	public void markDirty() {
+	public void onChanged() {
 		inv.markDirty();
+	}
+
+	@Override
+	public List<Runnable> getListeners() {
+		return new ArrayList<>();
 	}
 }

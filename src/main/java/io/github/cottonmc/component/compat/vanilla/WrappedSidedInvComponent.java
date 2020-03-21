@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.Direction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -157,7 +158,12 @@ public class WrappedSidedInvComponent implements InventoryComponent {
 	}
 
 	@Override
-	public void markDirty() {
+	public void onChanged() {
 		inv.markDirty();
+	}
+
+	@Override
+	public List<Runnable> getListeners() {
+		return new ArrayList<>();
 	}
 }

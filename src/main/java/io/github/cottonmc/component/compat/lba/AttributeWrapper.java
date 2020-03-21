@@ -51,13 +51,13 @@ public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 
 	@Override
 	public int getChangeValue() {
-		return 0; //TODO: impl
+		return 0; //TODO: impl?
 	}
 
 	@Nullable
 	@Override
 	public ListenerToken addListener(InvMarkDirtyListener listener, ListenerRemovalToken removalToken) {
-		return null; //TODO: impl
+		return null; //TODO: impl?
 	}
 
 	@Override

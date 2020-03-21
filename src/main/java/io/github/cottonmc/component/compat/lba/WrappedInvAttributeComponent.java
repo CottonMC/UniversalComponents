@@ -153,8 +153,8 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	}
 
 	@Override
-	public void markDirty() {
-
+	public List<Runnable> getListeners() {
+		return new ArrayList<>();
 	}
 
 	private ItemFilter createFilterForSlot(int slot) {

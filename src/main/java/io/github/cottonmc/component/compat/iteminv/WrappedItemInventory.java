@@ -153,7 +153,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	}
 
 	@Override
-	public void markDirty() {
-
+	public List<Runnable> getListeners() {
+		return new ArrayList<>();
 	}
 }
