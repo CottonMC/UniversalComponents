@@ -34,6 +34,7 @@ public class EntitySyncedInventoryComponent extends SimpleInventoryComponent imp
 		super(size);
 		this.type = type;
 		this.entity = entity;
+		listen(this::sync);
 	}
 
 	@Override

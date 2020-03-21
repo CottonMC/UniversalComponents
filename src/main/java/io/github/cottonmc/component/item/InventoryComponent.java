@@ -1,6 +1,7 @@
 package io.github.cottonmc.component.item;
 
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.Observable;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public interface InventoryComponent extends Component {
+public interface InventoryComponent extends Component, Observable {
 
 	/**
 	 * @return How many slots are in this inventory.
@@ -112,7 +113,7 @@ public interface InventoryComponent extends Component {
 	 */
 	default void clear() {
 		for (int i = 0; i < getSize(); i++) {
-			removeStack(i, ActionType.EXECUTE);
+			removeStack(i, ActionType.PERFORM);
 		}
 	}
 
@@ -196,11 +197,6 @@ public interface InventoryComponent extends Component {
 	default SidedInventory asLocalInventory(IWorld world, BlockPos pos) {
 		return null;
 	}
-
-	/**
-	 * Mark this component as needing saving to the world or syncing to the client.
-	 */
-	void markDirty();
 
 	@Override
 	default void fromTag(CompoundTag tag) {

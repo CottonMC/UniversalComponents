@@ -1,0 +1,10 @@
+{
+  "info.unicomp.wu.amount": "$d WU",
+  "info.unicomp.wu.amount.k": "$.3fK WU",
+  "info.unicomp.wu.amount.m": "$.3fM WU",
+  "info.unicomp.wu.amount.g": "$.3fG WU",
+  "info.teamreborn.energy.amount": "$d WU",
+  "info.teamreborn.energy.amount.k": "$.3fK Energy",
+  "info.teamreborn.energy.amount.m": "$.3fM Energy",
+  "info.teamreborn.energy.amount.g": "$.3fG Energy"
+}

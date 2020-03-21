@@ -1,4 +1,4 @@
-package io.github.cottonmc.component.util;
+package io.github.cottonmc.component.api;
 
 import net.fabricmc.loader.api.FabricLoader;
 

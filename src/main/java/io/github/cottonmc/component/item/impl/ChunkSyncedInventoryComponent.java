@@ -21,6 +21,7 @@ public class ChunkSyncedInventoryComponent extends SimpleInventoryComponent impl
 		super(size);
 		this.type = type;
 		this.chunk = chunk;
+		listen(this::sync);
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 	}
 
 	private ActionType actionForSim(Simulation simulation) {
-		if (simulation.isAction()) return ActionType.EXECUTE;
+		if (simulation.isAction()) return ActionType.PERFORM;
 		else return ActionType.TEST;
 	}
 }

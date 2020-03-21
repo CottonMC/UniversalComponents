@@ -1,11 +1,8 @@
 package io.github.cottonmc.component.item.impl;
 
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.component.extension.SyncedComponent;
-import net.minecraft.inventory.BasicInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
 
@@ -17,6 +14,7 @@ import java.util.List;
  */
 public class SimpleInventoryComponent implements InventoryComponent {
 	protected DefaultedList<ItemStack> stacks;
+	private final List<Runnable> listeners = new ArrayList<>();
 
 	public SimpleInventoryComponent(int size) {
 		stacks = DefaultedList.ofSize(size, ItemStack.EMPTY);
@@ -59,10 +57,10 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	@Override
 	public ItemStack takeStack(int slot, int amount, ActionType action) {
 		ItemStack stack = stacks.get(slot);
-		if (!action.shouldExecute()) {
+		if (!action.shouldPerform()) {
 			stack = stack.copy();
 		} else {
-			markDirty();
+			onChanged();
 		}
 		return stack.split(amount);
 	}
@@ -70,9 +68,9 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	@Override
 	public ItemStack removeStack(int slot, ActionType action) {
 		ItemStack stack = stacks.get(slot);
-		if (action.shouldExecute()) {
+		if (action.shouldPerform()) {
 			setStack(slot, ItemStack.EMPTY);
-			markDirty();
+			onChanged();
 		}
 		return stack;
 	}
@@ -80,7 +78,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	@Override
 	public void setStack(int slot, ItemStack stack) {
 		stacks.set(slot, stack);
-		markDirty();
+		onChanged();
 	}
 
 	@Override
@@ -100,16 +98,16 @@ public class SimpleInventoryComponent implements InventoryComponent {
 		int sizeLeft = maxSize - count;
 		if (sizeLeft >= stack.getCount()) {
 			//the target stack can accept our whole stack!
-			if (action.shouldExecute()) {
+			if (action.shouldPerform()) {
 				target.increment(stack.getCount());
-				markDirty();
+				onChanged();
 			}
 			return ItemStack.EMPTY;
 		} else {
 			//the target can't accept our whole stack, we're gonna have a remainder
-			if (action.shouldExecute()) {
+			if (action.shouldPerform()) {
 				target.setCount(maxSize);
-				markDirty();
+				onChanged();
 			}
 			stack.decrement(sizeLeft);
 			return stack;
@@ -126,9 +124,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	}
 
 	@Override
-	public void markDirty() {
-		if (this instanceof SyncedComponent) {
-			((SyncedComponent)this).sync();
-		}
+	public List<Runnable> getListeners() {
+		return listeners;
 	}
 }

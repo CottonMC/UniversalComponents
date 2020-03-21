@@ -2,17 +2,13 @@ package io.github.cottonmc.component.mixin.lba;
 
 import alexiil.mc.lib.attributes.CustomAttributeAdder;
 import alexiil.mc.lib.attributes.DefaultedAttribute;
-import alexiil.mc.lib.attributes.ItemAttributeList;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper;
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.InventoryProvider;
@@ -20,12 +16,10 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Function;
@@ -40,12 +34,11 @@ public class MixinItemAttributesBlock {
 			Block block = state.getBlock();
 			Direction direction = list.getSearchDirection();
 			Direction blockSide = direction == null ? null : direction.getOpposite();
-			BlockComponentProvider componentProvider = BlockComponentProvider.get(block);
 			SidedInventory sidedInv;
 			FixedItemInv wrapper;
 			//BEGIN INJECTION
-			if (componentProvider.hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide)) {
-				InventoryComponent component = componentProvider.getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, blockSide);
+			if (InventoryComponentHelper.hasInventoryComponent(world, pos, blockSide)) {
+				InventoryComponent component = InventoryComponentHelper.getInventoryComponent(world, pos, blockSide);
 				list.add(convertor.apply(new AttributeWrapper(component)));
 				//END INJECTION
 			} else if (block instanceof InventoryProvider) {

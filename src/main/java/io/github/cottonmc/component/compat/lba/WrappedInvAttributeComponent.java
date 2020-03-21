@@ -163,7 +163,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	}
 
 	private Simulation simForAction(ActionType type) {
-		if (type.shouldExecute()) return Simulation.ACTION;
+		if (type.shouldPerform()) return Simulation.ACTION;
 		else return Simulation.SIMULATE;
 	}
 }

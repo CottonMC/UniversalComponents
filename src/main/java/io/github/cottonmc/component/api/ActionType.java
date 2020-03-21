@@ -11,9 +11,9 @@ public enum ActionType {
 	/**
 	 * Perform the action. Will modify the resource store.
 	 */
-	EXECUTE;
+	PERFORM;
 
-	public boolean shouldExecute() {
-		return this == EXECUTE;
+	public boolean shouldPerform() {
+		return this == PERFORM;
 	}
 }

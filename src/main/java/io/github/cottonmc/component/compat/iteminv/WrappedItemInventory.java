@@ -59,7 +59,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	public ItemStack takeStack(int slot, int amount, ActionType action) {
 		ItemStack original = inv.getStack(stack, slot).copy();
 		ItemStack ret = inv.getStack(stack, slot).split(amount);
-		if (!action.shouldExecute()) {
+		if (!action.shouldPerform()) {
 			inv.setStack(stack, slot, original); //don't mutate the inventory
 		}
 		return ret;
@@ -68,7 +68,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	@Override
 	public ItemStack removeStack(int slot, ActionType action) {
 		ItemStack ret = inv.getStack(stack, slot);
-		if (action.shouldExecute()) {
+		if (action.shouldPerform()) {
 			inv.setStack(stack, slot, ItemStack.EMPTY);
 		}
 		return ret;
@@ -96,13 +96,13 @@ public class WrappedItemInventory implements InventoryComponent {
 		int sizeLeft = maxSize - count;
 		if (sizeLeft >= stack.getCount()) {
 			//the target stack can accept our whole stack!
-			if (action.shouldExecute()) {
+			if (action.shouldPerform()) {
 				target.increment(stack.getCount()); //we can do this safely since the ItemInventory contract doesn't force immutability
 			}
 			return ItemStack.EMPTY;
 		} else {
 			//the target can't accept our whole stack, we're gonna have a remainder
-			if (action.shouldExecute()) {
+			if (action.shouldPerform()) {
 				target.setCount(maxSize); //we can do this safely since the ItemInventory contract doesn't force immutability
 			}
 			stack.decrement(sizeLeft);

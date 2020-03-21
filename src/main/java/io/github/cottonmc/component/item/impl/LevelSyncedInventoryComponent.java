@@ -20,6 +20,7 @@ public class LevelSyncedInventoryComponent extends SimpleInventoryComponent impl
 	public LevelSyncedInventoryComponent(int size, ComponentType<InventoryComponent> type) {
 		super(size);
 		this.type = type;
+		listen(this::sync);
 	}
 
 	@Override

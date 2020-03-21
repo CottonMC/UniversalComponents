@@ -8,7 +8,7 @@ import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
 import io.github.cottonmc.component.compat.lba.LBAInvHook;
 import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
 import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
-import io.github.cottonmc.component.util.IntegrationHandler;
+import io.github.cottonmc.component.api.IntegrationHandler;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
@@ -51,7 +51,7 @@ public class InventoryComponentHelper {
 	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
 	 */
 	@Nullable
-	public static InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
 			InventoryComponent component = hook.getComponent(world, pos, dir);
@@ -165,9 +165,10 @@ public class InventoryComponentHelper {
 		InventoryComponent getComponent(ItemStack stack);
 	}
 
-	public interface DualInventoryHook extends BlockInventoryHook, ItemInventoryHook {
-
-	}
+	/**
+	 * Interface for accessing inventories both in the world and on item stacks.
+	 */
+	public interface DualInventoryHook extends BlockInventoryHook, ItemInventoryHook { }
 
 	static {
 		//block components - first priority for blocks, since they're ours
