@@ -180,6 +180,7 @@ public class InventoryComponentHelper {
 		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
 		addItemHook("iteminventory", ItemInvHook::getInstance);
 //		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
+		//TODO: why the fuck is this being so finnicky
 		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
 		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
 //		addDualHook("fluidity", FluidityInvHook::getInstance);
