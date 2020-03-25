@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class InventoryComponentHelper {
 
@@ -172,26 +173,26 @@ public class InventoryComponentHelper {
 
 	static {
 		//block components - first priority for blocks, since they're ours
-		addBlockHook("cardinal-components-block", BlockComponentInvHook.INSTANCE);
+		addBlockHook("cardinal-components-block", BlockComponentInvHook::getInstance);
 		//entity components - second priority for blocks, since they're ours
-		addBlockHook("cardinal-components-entity", EntityComponentInvHook.INSTANCE);
+		addBlockHook("cardinal-components-entity", EntityComponentInvHook::getInstance);
 		//item components - first priority for items
-		addItemHook("cardinal-components-item", ItemComponentInvHook.INSTANCE);
-		addItemHook("iteminventory", ItemInvHook.INSTANCE);
-		addDualHook("libblockattributes_item", LBAInvHook.INSTANCE);
-		addDualHook("fluidity", FluidityInvHook.INSTANCE);
+		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
+		addItemHook("iteminventory", ItemInvHook::getInstance);
+		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
+		addDualHook("fluidity", FluidityInvHook::getInstance);
 		//TODO: Patchwork capabilities once it's out
 	}
 
-	private static void addBlockHook(String targetMod, BlockInventoryHook hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addBlockHook(hook));
+	private static void addBlockHook(String targetMod, Supplier<BlockInventoryHook> hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addBlockHook(hook.get()));
 	}
 
-	private static void addItemHook(String targetMod, ItemInventoryHook hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addItemHook(hook));
+	private static void addItemHook(String targetMod, Supplier<ItemInventoryHook> hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addItemHook(hook.get()));
 	}
 
-	private static void addDualHook(String targetMod, DualInventoryHook hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addDualHook(hook));
+	private static void addDualHook(String targetMod, Supplier<DualInventoryHook> hook) {
+		IntegrationHandler.runIfPresent(targetMod, () -> addDualHook(hook.get()));
 	}
 }

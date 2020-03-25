@@ -8,7 +8,11 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 
 public class ItemInvHook implements InventoryComponentHelper.ItemInventoryHook {
-	public static final ItemInvHook INSTANCE = new ItemInvHook();
+	private static final ItemInvHook INSTANCE = new ItemInvHook();
+
+	public static ItemInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public boolean hasComponent(ItemStack stack) {
 		return stack.getItem() instanceof ItemInventory;

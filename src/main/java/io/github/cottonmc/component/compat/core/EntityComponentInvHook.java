@@ -15,7 +15,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class EntityComponentInvHook implements InventoryComponentHelper.BlockInventoryHook {
-	public static final EntityComponentInvHook INSTANCE = new EntityComponentInvHook();
+	private static final EntityComponentInvHook INSTANCE = new EntityComponentInvHook();
+
+	public static EntityComponentInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public static final Predicate<Entity> HAS_COMPONENT = entity -> UniversalComponents.INVENTORY_COMPONENT.maybeGet(entity).isPresent();
 

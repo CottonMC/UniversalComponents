@@ -11,7 +11,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class BlockComponentInvHook implements InventoryComponentHelper.BlockInventoryHook {
-	public static final BlockComponentInvHook INSTANCE = new BlockComponentInvHook();
+	private static final BlockComponentInvHook INSTANCE = new BlockComponentInvHook();
+
+	public static BlockComponentInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		return BlockComponentProvider.get(world.getBlockState(pos)).hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);

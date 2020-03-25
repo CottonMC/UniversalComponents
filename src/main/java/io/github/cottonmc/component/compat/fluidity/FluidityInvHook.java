@@ -12,7 +12,11 @@ import javax.annotation.Nullable;
 
 //TODO: implement
 public class FluidityInvHook implements InventoryComponentHelper.DualInventoryHook {
-	public static final FluidityInvHook INSTANCE = new FluidityInvHook();
+	private static final FluidityInvHook INSTANCE = new FluidityInvHook();
+
+	public static FluidityInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		return false;

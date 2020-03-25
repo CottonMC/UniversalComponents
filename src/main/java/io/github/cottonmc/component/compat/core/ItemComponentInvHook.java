@@ -9,7 +9,11 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class ItemComponentInvHook implements InventoryComponentHelper.ItemInventoryHook {
-	public static final ItemComponentInvHook INSTANCE = new ItemComponentInvHook();
+	private static final ItemComponentInvHook INSTANCE = new ItemComponentInvHook();
+
+	public static ItemComponentInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public boolean hasComponent(ItemStack stack) {
 		return UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent();

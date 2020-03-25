@@ -14,7 +14,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class LBAInvHook implements InventoryComponentHelper.DualInventoryHook {
-	public static final LBAInvHook INSTANCE = new LBAInvHook();
+	private static final LBAInvHook INSTANCE = new LBAInvHook();
+
+	public static LBAInvHook getInstance() {
+		return INSTANCE;
+	}
 
 	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		if (dir == null) return ItemAttributes.FIXED_INV.get(world, pos) != EmptyFixedItemInv.INSTANCE;
