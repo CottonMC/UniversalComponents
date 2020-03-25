@@ -179,8 +179,12 @@ public class InventoryComponentHelper {
 		//item components - first priority for items
 		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
 		addItemHook("iteminventory", ItemInvHook::getInstance);
-		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
-		addDualHook("fluidity", FluidityInvHook::getInstance);
+//		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
+		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
+		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
+//		addDualHook("fluidity", FluidityInvHook::getInstance);
+		addBlockHook("fluidity", FluidityInvHook::getInstance);
+		addItemHook("fluidity", FluidityInvHook::getInstance);
 		//TODO: Patchwork capabilities once it's out
 	}
 
