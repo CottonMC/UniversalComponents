@@ -1,6 +1,7 @@
 package io.github.cottonmc.component;
 
 import io.github.cottonmc.component.api.IntegrationHandler;
+import io.github.cottonmc.component.compat.tr.RebornEnergyType;
 import io.github.cottonmc.component.compat.tr.RebornEnergyTypes;
 import io.github.cottonmc.component.data.DataProviderComponent;
 import io.github.cottonmc.component.energy.CapacitorComponent;
@@ -11,6 +12,7 @@ import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
@@ -44,6 +46,8 @@ public class UniversalComponents implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		EnergyTypes.init();
-		IntegrationHandler.runIfPresent("team_reborn_energy", RebornEnergyTypes::init);
+		if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {
+			RebornEnergyTypes.init();
+		}
 	}
 }

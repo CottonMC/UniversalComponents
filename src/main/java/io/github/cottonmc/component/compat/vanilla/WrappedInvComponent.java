@@ -84,7 +84,7 @@ public class WrappedInvComponent implements InventoryComponent {
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
 		ItemStack target = inv.getInvStack(slot);
 
-		if (target.isItemEqualIgnoreDamage(stack)) {
+		if (!target.isItemEqualIgnoreDamage(stack)) {
 			//unstackable, can't merge!
 			return stack;
 		}
@@ -98,14 +98,24 @@ public class WrappedInvComponent implements InventoryComponent {
 		if (sizeLeft >= stack.getCount()) {
 			//the target stack can accept our whole stack!
 			if (action.shouldPerform()) {
-				target.increment(stack.getCount()); //we can do this safely since the Inventory contract doesn't force immutability
+				if (target.isEmpty()) {
+					inv.setInvStack(slot, stack);
+				} else {
+					target.increment(stack.getCount()); //we can do this safely since the Inventory contract doesn't force immutability
+				}
 				inv.markDirty();
 			}
 			return ItemStack.EMPTY;
 		} else {
 			//the target can't accept our whole stack, we're gonna have a remainder
 			if (action.shouldPerform()) {
-				target.setCount(maxSize); //we can do this safely since the Inventory contract doesn't force immutability
+				if (target.isEmpty()) {
+					ItemStack newStack = stack.copy();
+					newStack.setCount(maxSize);
+					inv.setInvStack(slot, newStack);
+				} else {
+					target.setCount(maxSize); //we can do this safely since the Inventory contract doesn't force immutability
+				}
 				inv.markDirty();
 			}
 			stack.decrement(sizeLeft);
