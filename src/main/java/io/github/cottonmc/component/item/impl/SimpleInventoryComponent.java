@@ -85,7 +85,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
 		ItemStack target = stacks.get(slot);
 
-		if (target.isItemEqualIgnoreDamage(stack)) {
+		if (!target.isEmpty() && !target.isItemEqualIgnoreDamage(stack))  {
 			//unstackable, can't merge!
 			return stack;
 		}
@@ -99,14 +99,24 @@ public class SimpleInventoryComponent implements InventoryComponent {
 		if (sizeLeft >= stack.getCount()) {
 			//the target stack can accept our whole stack!
 			if (action.shouldPerform()) {
-				target.increment(stack.getCount());
+				if (target.isEmpty()) {
+					setStack(slot, stack);
+				} else {
+					target.increment(stack.getCount());
+				}
 				onChanged();
 			}
 			return ItemStack.EMPTY;
 		} else {
 			//the target can't accept our whole stack, we're gonna have a remainder
 			if (action.shouldPerform()) {
-				target.setCount(maxSize);
+				if (target.isEmpty()) {
+					ItemStack newStack = stack.copy();
+					newStack.setCount(maxSize);
+					setStack(slot, newStack);
+				} else {
+					target.setCount(maxSize);
+				}
 				onChanged();
 			}
 			stack.decrement(sizeLeft);

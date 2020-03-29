@@ -12,11 +12,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class BlockComponentInvHook implements InventoryComponentHelper.BlockInventoryHook, TankComponentHelper.BlockTankHook {
-	private static final BlockComponentInvHook INSTANCE = new BlockComponentInvHook();
+public class BlockComponentHook implements InventoryComponentHelper.BlockInventoryHook, TankComponentHelper.BlockTankHook {
+	public static final BlockComponentHook INSTANCE = new BlockComponentHook();
 
-	public static BlockComponentInvHook getInstance() {
-		return INSTANCE;
+	public static void initInventory() {
+		InventoryComponentHelper.addBlockHook(INSTANCE);
+	}
+
+	public static void initTank() {
+		TankComponentHelper.addBlockHook(INSTANCE);
 	}
 
 	public boolean hasInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
@@ -39,5 +43,5 @@ public class BlockComponentInvHook implements InventoryComponentHelper.BlockInve
 		return BlockComponentProvider.get(world.getBlockState(pos)).getComponent(world, pos, UniversalComponents.TANK_COMPONENT, dir);
 	}
 
-	private BlockComponentInvHook() { }
+	private BlockComponentHook() { }
 }

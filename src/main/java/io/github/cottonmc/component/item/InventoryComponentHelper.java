@@ -1,11 +1,11 @@
 package io.github.cottonmc.component.item;
 
-import io.github.cottonmc.component.compat.core.BlockComponentInvHook;
-import io.github.cottonmc.component.compat.core.EntityComponentInvHook;
-import io.github.cottonmc.component.compat.core.ItemComponentInvHook;
-import io.github.cottonmc.component.compat.fluidity.FluidityInvHook;
+import io.github.cottonmc.component.compat.core.BlockComponentHook;
+import io.github.cottonmc.component.compat.core.EntityComponentHook;
+import io.github.cottonmc.component.compat.core.ItemComponentHook;
+import io.github.cottonmc.component.compat.fluidity.FluidityHook;
 import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
-import io.github.cottonmc.component.compat.lba.LBAInvHook;
+import io.github.cottonmc.component.compat.lba.LBAHook;
 import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
 import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
 import io.github.cottonmc.component.api.IntegrationHandler;
@@ -173,32 +173,14 @@ public class InventoryComponentHelper {
 
 	static {
 		//block components - first priority for blocks, since they're ours
-		addBlockHook("cardinal-components-block", BlockComponentInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-block", () -> BlockComponentHook::initInventory);
 		//entity components - second priority for blocks, since they're ours
-		addBlockHook("cardinal-components-entity", EntityComponentInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-entity", () -> EntityComponentHook::initInventory);
 		//item components - first priority for items
-		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
-		addItemHook("iteminventory", ItemInvHook::getInstance);
-		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
-//		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
-//		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
-		addDualHook("fluidity", FluidityInvHook::getInstance);
-//		addBlockHook("fluidity", FluidityInvHook::getInstance);
-//		addItemHook("fluidity", FluidityInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initInventory);
+		IntegrationHandler.runIfPresent("iteminventory", () -> ItemInvHook::init);
+		IntegrationHandler.runIfPresent("libblockattributes_item", () -> LBAHook::initInv);
+		IntegrationHandler.runIfPresent("fluidity", () -> FluidityHook::initInv);
 		//TODO: Patchwork capabilities once it's out
-	}
-
-
-	//TODO: this might still be bad, we'll find out
-	private static void addBlockHook(String targetMod, Supplier<BlockInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addBlockHook(hook.get()));
-	}
-
-	private static void addItemHook(String targetMod, Supplier<ItemInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addItemHook(hook.get()));
-	}
-
-	private static void addDualHook(String targetMod, Supplier<DualInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addDualHook(hook.get()));
 	}
 }

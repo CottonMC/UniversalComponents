@@ -5,7 +5,6 @@ import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -17,11 +16,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class EntityComponentInvHook implements InventoryComponentHelper.BlockInventoryHook, TankComponentHelper.BlockTankHook {
-	private static final EntityComponentInvHook INSTANCE = new EntityComponentInvHook();
+public class EntityComponentHook implements InventoryComponentHelper.BlockInventoryHook, TankComponentHelper.BlockTankHook {
+	private static final EntityComponentHook INSTANCE = new EntityComponentHook();
 
-	public static EntityComponentInvHook getInstance() {
-		return INSTANCE;
+	public static void initInventory() {
+		InventoryComponentHelper.addBlockHook(INSTANCE);
+	}
+
+	public static void initTank() {
+		TankComponentHelper.addBlockHook(INSTANCE);
 	}
 
 	public static final Predicate<Entity> HAS_INV_COMPONENT = entity -> UniversalComponents.INVENTORY_COMPONENT.maybeGet(entity).isPresent();
@@ -52,6 +55,6 @@ public class EntityComponentInvHook implements InventoryComponentHelper.BlockInv
 		return UniversalComponents.TANK_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
-	private EntityComponentInvHook() { }
+	private EntityComponentHook() { }
 
 }

@@ -13,24 +13,24 @@ import java.util.List;
 import java.util.Set;
 
 public class WrappedItemInventory implements InventoryComponent {
-	private ItemStack stack;
+	private ItemStack holderStack;
 	private ItemInventory inv;
 
 	public WrappedItemInventory(ItemStack stack, ItemInventory inventory) {
-		this.stack = stack;
+		this.holderStack = stack;
 		this.inv = inventory;
 	}
 
 	@Override
 	public int getSize() {
-		return inv.getInvSize(stack);
+		return inv.getInvSize(holderStack);
 	}
 
 	@Override
 	public List<ItemStack> getStacks() {
 		List<ItemStack> ret = new ArrayList<>();
-		for (int i = 0; i < inv.getInvSize(stack); i++) {
-			ret.add(inv.getStack(stack, i).copy());
+		for (int i = 0; i < inv.getInvSize(holderStack); i++) {
+			ret.add(inv.getStack(holderStack, i).copy());
 		}
 		return ret;
 	}
@@ -42,34 +42,34 @@ public class WrappedItemInventory implements InventoryComponent {
 
 	@Override
 	public ItemStack getStack(int slot) {
-		return inv.getStack(stack, slot).copy();
+		return inv.getStack(holderStack, slot).copy();
 	}
 
 	@Override
 	public boolean canInsert(int slot) {
-		return inv.canInsert(stack, slot, ItemStack.EMPTY); //TODO: better solution?
+		return inv.canInsert(holderStack, slot, ItemStack.EMPTY); //TODO: better solution?
 	}
 
 	@Override
 	public boolean canExtract(int slot) {
-		return inv.canTake(stack, slot);
+		return inv.canTake(holderStack, slot);
 	}
 
 	@Override
 	public ItemStack takeStack(int slot, int amount, ActionType action) {
-		ItemStack original = inv.getStack(stack, slot).copy();
-		ItemStack ret = inv.getStack(stack, slot).split(amount);
+		ItemStack original = inv.getStack(holderStack, slot).copy();
+		ItemStack ret = inv.getStack(holderStack, slot).split(amount);
 		if (!action.shouldPerform()) {
-			inv.setStack(stack, slot, original); //don't mutate the inventory
+			inv.setStack(holderStack, slot, original); //don't mutate the inventory
 		}
 		return ret;
 	}
 
 	@Override
 	public ItemStack removeStack(int slot, ActionType action) {
-		ItemStack ret = inv.getStack(stack, slot);
+		ItemStack ret = inv.getStack(holderStack, slot);
 		if (action.shouldPerform()) {
-			inv.setStack(stack, slot, ItemStack.EMPTY);
+			inv.setStack(holderStack, slot, ItemStack.EMPTY);
 		}
 		return ret;
 	}
@@ -83,7 +83,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
 		ItemStack target = inv.getStack(stack, slot);
 
-		if (target.isItemEqualIgnoreDamage(stack)) {
+		if (!target.isEmpty() && !target.isItemEqualIgnoreDamage(stack)) {
 			//unstackable, can't merge!
 			return stack;
 		}
@@ -97,13 +97,23 @@ public class WrappedItemInventory implements InventoryComponent {
 		if (sizeLeft >= stack.getCount()) {
 			//the target stack can accept our whole stack!
 			if (action.shouldPerform()) {
-				target.increment(stack.getCount()); //we can do this safely since the ItemInventory contract doesn't force immutability
+				if (target.isEmpty()) {
+					inv.setStack(holderStack, slot, stack);
+				} else {
+					target.increment(stack.getCount()); //we can do this safely since the ItemInventory contract doesn't force immutability
+				}
 			}
 			return ItemStack.EMPTY;
 		} else {
 			//the target can't accept our whole stack, we're gonna have a remainder
 			if (action.shouldPerform()) {
-				target.setCount(maxSize); //we can do this safely since the ItemInventory contract doesn't force immutability
+				if (target.isEmpty()) {
+					ItemStack newStack = stack.copy();
+					newStack.setCount(maxSize);
+					inv.setStack(holderStack, slot, newStack);
+				} else {
+					target.setCount(maxSize); //we can do this safely since the ItemInventory contract doesn't force immutability
+				}
 			}
 			stack.decrement(sizeLeft);
 			return stack;
@@ -127,8 +137,8 @@ public class WrappedItemInventory implements InventoryComponent {
 	@Override
 	public int amountOf(Set<Item> items) {
 		int ret = 0;
-		for (int i = 0; i < inv.getInvSize(stack); i++) {
-			ItemStack invStack = inv.getStack(stack, i);
+		for (int i = 0; i < inv.getInvSize(holderStack); i++) {
+			ItemStack invStack = inv.getStack(holderStack, i);
 			if (items.contains(invStack.getItem())) {
 				ret += invStack.getCount();
 			}
@@ -138,8 +148,8 @@ public class WrappedItemInventory implements InventoryComponent {
 
 	@Override
 	public boolean contains(Set<Item> items) {
-		for (int i = 0; i < inv.getInvSize(stack); i++) {
-			ItemStack invStack = inv.getStack(stack, i);
+		for (int i = 0; i < inv.getInvSize(holderStack); i++) {
+			ItemStack invStack = inv.getStack(holderStack, i);
 			if (items.contains(invStack.getItem())) {
 				return true;
 			}

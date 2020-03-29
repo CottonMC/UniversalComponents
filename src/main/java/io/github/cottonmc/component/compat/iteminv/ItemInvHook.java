@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 public class ItemInvHook implements InventoryComponentHelper.ItemInventoryHook {
 	private static final ItemInvHook INSTANCE = new ItemInvHook();
 
-	public static ItemInvHook getInstance() {
-		return INSTANCE;
+	public static void init() {
+		InventoryComponentHelper.addItemHook(INSTANCE);
 	}
 
 	public boolean hasInvComponent(ItemStack stack) {

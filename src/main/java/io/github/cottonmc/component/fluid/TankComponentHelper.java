@@ -1,9 +1,9 @@
 package io.github.cottonmc.component.fluid;
 
 import io.github.cottonmc.component.api.IntegrationHandler;
-import io.github.cottonmc.component.compat.core.BlockComponentInvHook;
-import io.github.cottonmc.component.compat.core.EntityComponentInvHook;
-import io.github.cottonmc.component.compat.core.ItemComponentInvHook;
+import io.github.cottonmc.component.compat.core.BlockComponentHook;
+import io.github.cottonmc.component.compat.core.EntityComponentHook;
+import io.github.cottonmc.component.compat.core.ItemComponentHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
@@ -161,24 +160,12 @@ public class TankComponentHelper {
 
 	static {
 		//block components - first priority for blocks, since they're ours
-		addBlockHook("cardinal-components-block", BlockComponentInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-block", () -> BlockComponentHook::initTank);
 		//entity components - second priority for blocks, since they're ours
-		addBlockHook("cardinal-components-entity", EntityComponentInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-entity", () -> EntityComponentHook::initTank);
 		//item components - first priority for items
-		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
+		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initTank);
 		//TODO: Patchwork capabilities once it's out
 	}
 
-	//TODO: this might still be bad, we'll find out
-	private static void addBlockHook(String targetMod, Supplier<BlockTankHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addBlockHook(hook.get()));
-	}
-
-	private static void addItemHook(String targetMod, Supplier<ItemTankHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addItemHook(hook.get()));
-	}
-
-	private static void addDualHook(String targetMod, Supplier<DualTankHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> () -> addDualHook(hook.get()));
-	}
 }

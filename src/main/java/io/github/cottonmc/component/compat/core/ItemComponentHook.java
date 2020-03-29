@@ -10,11 +10,15 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ItemComponentInvHook implements InventoryComponentHelper.ItemInventoryHook, TankComponentHelper.ItemTankHook {
-	private static final ItemComponentInvHook INSTANCE = new ItemComponentInvHook();
+public class ItemComponentHook implements InventoryComponentHelper.ItemInventoryHook, TankComponentHelper.ItemTankHook {
+	private static final ItemComponentHook INSTANCE = new ItemComponentHook();
 
-	public static ItemComponentInvHook getInstance() {
-		return INSTANCE;
+	public static void initInventory() {
+		InventoryComponentHelper.addItemHook(INSTANCE);
+	}
+
+	public static void initTank() {
+		TankComponentHelper.addItemHook(INSTANCE);
 	}
 
 	public boolean hasInvComponent(ItemStack stack) {
@@ -39,5 +43,5 @@ public class ItemComponentInvHook implements InventoryComponentHelper.ItemInvent
 		return component.orElse(null);
 	}
 
-	private ItemComponentInvHook() { }
+	private ItemComponentHook() { }
 }
