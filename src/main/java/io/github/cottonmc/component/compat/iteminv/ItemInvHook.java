@@ -14,12 +14,12 @@ public class ItemInvHook implements InventoryComponentHelper.ItemInventoryHook {
 		return INSTANCE;
 	}
 
-	public boolean hasComponent(ItemStack stack) {
+	public boolean hasInvComponent(ItemStack stack) {
 		return stack.getItem() instanceof ItemInventory;
 	}
 
 	@Nullable
-	public InventoryComponent getComponent(ItemStack stack) {
+	public InventoryComponent getInvComponent(ItemStack stack) {
 		if (stack.getItem() instanceof ItemInventory) {
 			return new WrappedItemInventory(stack, (ItemInventory) stack.getItem());
 		}

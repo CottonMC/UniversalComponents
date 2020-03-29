@@ -1,17 +1,9 @@
-package io.github.cottonmc.component.item;
+package io.github.cottonmc.component.fluid;
 
+import io.github.cottonmc.component.api.IntegrationHandler;
 import io.github.cottonmc.component.compat.core.BlockComponentInvHook;
 import io.github.cottonmc.component.compat.core.EntityComponentInvHook;
 import io.github.cottonmc.component.compat.core.ItemComponentInvHook;
-import io.github.cottonmc.component.compat.fluidity.FluidityInvHook;
-import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
-import io.github.cottonmc.component.compat.lba.LBAInvHook;
-import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
-import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
-import io.github.cottonmc.component.api.IntegrationHandler;
-import net.minecraft.block.entity.HopperBlockEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,11 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class InventoryComponentHelper {
+/**
+ * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
+ * CROSS-COMPATIBILITY WILL BE IMPLEMENTED WHEN API STABILIZES; PLEASE BE PATIENT
+ */
+public class TankComponentHelper {
+	private static final List<TankComponentHelper.BlockTankHook> BLOCK_HOOKS = new ArrayList<>();
 
-	private static final List<BlockInventoryHook> BLOCK_HOOKS = new ArrayList<>();
-
-	private static final List<ItemInventoryHook> ITEM_HOOKS = new ArrayList<>();
+	private static final List<TankComponentHelper.ItemTankHook> ITEM_HOOKS = new ArrayList<>();
 
 	/**
 	 * Query whether a block has a compatible inventory component.
@@ -35,13 +30,13 @@ public class InventoryComponentHelper {
 	 * @param dir The direction to access the inventory from, or null.
 	 * @return Whether this block has an inventory we can access.
 	 */
-	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public static boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		//check registered block hooks
-		for (BlockInventoryHook hook : BLOCK_HOOKS) {
-			if (hook.hasInvComponent(world, pos, dir)) return true;
+		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			if (hook.hasTankComponent(world, pos, dir)) return true;
 		}
-		//no special hooks, so fall back to vanilla
-		return HopperBlockEntity.getInventoryAt(world, pos) != null;
+		//no special hooks, so return false
+		return false;
 	}
 
 	/**
@@ -52,20 +47,13 @@ public class InventoryComponentHelper {
 	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
 	 */
 	@Nullable
-	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		//check registered block hooks
-		for (BlockInventoryHook hook : BLOCK_HOOKS) {
-			InventoryComponent component = hook.getInvComponent(world, pos, dir);
+		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			TankComponent component = hook.getTankComponent(world, pos, dir);
 			if (component != null) return component;
 		}
-		//no special hooks, so fall back to vanilla
-		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
-		if (inv instanceof SidedInventory) {
-			return new WrappedSidedInvComponent((SidedInventory)inv, dir);
-		}
-		if (inv != null) {
-			return new WrappedInvComponent(inv);
-		}
+		//no special hooks, so return null
 		return null;
 	}
 
@@ -74,9 +62,9 @@ public class InventoryComponentHelper {
 	 * @param stack The stack to check on.
 	 * @return Whether a this stack has an inventory we can access.
 	 */
-	public static boolean hasInventoryComponent(ItemStack stack) {
-		for (ItemInventoryHook hook : ITEM_HOOKS) {
-			if (hook.hasInvComponent(stack)) return true;
+	public static boolean hasTankComponent(ItemStack stack) {
+		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
+			if (hook.hasTankComponent(stack)) return true;
 		}
 		return false;
 	}
@@ -87,9 +75,9 @@ public class InventoryComponentHelper {
 	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
 	 */
 	@Nullable
-	public static InventoryComponent getInventoryComponent(ItemStack stack) {
-		for (ItemInventoryHook hook : ITEM_HOOKS) {
-			InventoryComponent component = hook.getInvComponent(stack);
+	public static TankComponent getTankComponent(ItemStack stack) {
+		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
+			TankComponent component = hook.getTankComponent(stack);
 			if (component != null) return component;
 		}
 		return null;
@@ -99,7 +87,7 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing an inventory stored on a block or an entity at a given position.
 	 * @param hook The hook to add.
 	 */
-	public static void addBlockHook(BlockInventoryHook hook) {
+	public static void addBlockHook(TankComponentHelper.BlockTankHook hook) {
 		BLOCK_HOOKS.add(hook);
 	}
 
@@ -107,7 +95,7 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing an inventory stored on an item stack.
 	 * @param hook The hook to add.
 	 */
-	public static void addItemHook(ItemInventoryHook hook) {
+	public static void addItemHook(TankComponentHelper.ItemTankHook hook) {
 		ITEM_HOOKS.add(hook);
 	}
 
@@ -115,17 +103,17 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing both inventories stored on blocks or entities and on item stacks.
 	 * @param hook The hook to add.
 	 */
-	public static void addDualHook(DualInventoryHook hook) {
+	public static void addDualHook(TankComponentHelper.DualTankHook hook) {
 		BLOCK_HOOKS.add(hook);
 		ITEM_HOOKS.add(hook);
 	}
 
-	private InventoryComponentHelper() { }
+	private TankComponentHelper() { }
 
 	/**
 	 * Interface for accessing inventories in the world - either on a block, or on an entity at the given position.
 	 */
-	public interface BlockInventoryHook {
+	public interface BlockTankHook {
 		/**
 		 * Test for a compatible inventory in the world.
 		 * @param world The world to test in.
@@ -133,7 +121,7 @@ public class InventoryComponentHelper {
 		 * @param dir The direction to test from, or null.
 		 * @return Whether a compatible inventory exists here.
 		 */
-		boolean hasInvComponent(World world, BlockPos pos, @Nullable Direction dir);
+		boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir);
 
 		/**
 		 * Get a compatible inventory in the world.
@@ -143,19 +131,19 @@ public class InventoryComponentHelper {
 		 * @return A wrapped form of a compatible inventory, or null if one doesn't exist.
 		 */
 		@Nullable
-		InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir);
+		TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir);
 	}
 
 	/**
 	 * Interface for accessing inventories on item stacks.
 	 */
-	public interface ItemInventoryHook {
+	public interface ItemTankHook {
 		/**
 		 * Test for a compatible inventory on a stack.
 		 * @param stack The stack to test.
 		 * @return Whether the stack has a compatible inventory.
 		 */
-		boolean hasInvComponent(ItemStack stack);
+		boolean hasTankComponent(ItemStack stack);
 
 		/**
 		 * Get a compatible inventory on a stack.
@@ -163,13 +151,13 @@ public class InventoryComponentHelper {
 		 * @return A wrapped form of the compatible inventory, or null if one doesn't exist.
 		 */
 		@Nullable
-		InventoryComponent getInvComponent(ItemStack stack);
+		TankComponent getTankComponent(ItemStack stack);
 	}
 
 	/**
 	 * Interface for accessing inventories both in the world and on item stacks.
 	 */
-	public interface DualInventoryHook extends BlockInventoryHook, ItemInventoryHook { }
+	public interface DualTankHook extends BlockTankHook, ItemTankHook { }
 
 	static {
 		//block components - first priority for blocks, since they're ours
@@ -178,27 +166,19 @@ public class InventoryComponentHelper {
 		addBlockHook("cardinal-components-entity", EntityComponentInvHook::getInstance);
 		//item components - first priority for items
 		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
-		addItemHook("iteminventory", ItemInvHook::getInstance);
-		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
-//		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
-//		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
-		addDualHook("fluidity", FluidityInvHook::getInstance);
-//		addBlockHook("fluidity", FluidityInvHook::getInstance);
-//		addItemHook("fluidity", FluidityInvHook::getInstance);
 		//TODO: Patchwork capabilities once it's out
 	}
 
-
 	//TODO: this might still be bad, we'll find out
-	private static void addBlockHook(String targetMod, Supplier<BlockInventoryHook> hook) {
+	private static void addBlockHook(String targetMod, Supplier<BlockTankHook> hook) {
 		IntegrationHandler.runIfPresent(targetMod, () -> () -> addBlockHook(hook.get()));
 	}
 
-	private static void addItemHook(String targetMod, Supplier<ItemInventoryHook> hook) {
+	private static void addItemHook(String targetMod, Supplier<ItemTankHook> hook) {
 		IntegrationHandler.runIfPresent(targetMod, () -> () -> addItemHook(hook.get()));
 	}
 
-	private static void addDualHook(String targetMod, Supplier<DualInventoryHook> hook) {
+	private static void addDualHook(String targetMod, Supplier<DualTankHook> hook) {
 		IntegrationHandler.runIfPresent(targetMod, () -> () -> addDualHook(hook.get()));
 	}
 }

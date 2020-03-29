@@ -29,7 +29,7 @@ public class UniversalComponents implements ModInitializer {
 	 */
 	public static final ComponentType<InventoryComponent> INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "inventory"), InventoryComponent.class);
 	/**
-	 * A fluid-handling component, for dealing with fluid stacks.
+	 * A fluid-handling component, for dealing with fluid volumes.
 	 */
 	public static final ComponentType<TankComponent> TANK_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "tank"), TankComponent.class);
 	/**

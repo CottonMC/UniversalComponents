@@ -18,21 +18,21 @@ public class FluidityInvHook implements InventoryComponentHelper.DualInventoryHo
 		return INSTANCE;
 	}
 
-	public boolean hasComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public boolean hasInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		return false;
 	}
 
 	@Nullable
-	public InventoryComponent getComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		return null;
 	}
 
-	public boolean hasComponent(ItemStack stack) {
+	public boolean hasInvComponent(ItemStack stack) {
 		return false;
 	}
 
 	@Nullable
-	public InventoryComponent getComponent(ItemStack stack) {
+	public InventoryComponent getInvComponent(ItemStack stack) {
 		return null;
 	}
 

@@ -1,6 +1,8 @@
 package io.github.cottonmc.component.compat.core;
 
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.item.ItemStack;
@@ -8,20 +10,32 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ItemComponentInvHook implements InventoryComponentHelper.ItemInventoryHook {
+public class ItemComponentInvHook implements InventoryComponentHelper.ItemInventoryHook, TankComponentHelper.ItemTankHook {
 	private static final ItemComponentInvHook INSTANCE = new ItemComponentInvHook();
 
 	public static ItemComponentInvHook getInstance() {
 		return INSTANCE;
 	}
 
-	public boolean hasComponent(ItemStack stack) {
+	public boolean hasInvComponent(ItemStack stack) {
 		return UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack).isPresent();
 	}
 
 	@Nullable
-	public InventoryComponent getComponent(ItemStack stack) {
+	public InventoryComponent getInvComponent(ItemStack stack) {
 		Optional<InventoryComponent> component = UniversalComponents.INVENTORY_COMPONENT.maybeGet(stack);
+		return component.orElse(null);
+	}
+
+	@Override
+	public boolean hasTankComponent(ItemStack stack) {
+		return UniversalComponents.TANK_COMPONENT.maybeGet(stack).isPresent();
+	}
+
+	@Nullable
+	@Override
+	public TankComponent getTankComponent(ItemStack stack) {
+		Optional<TankComponent> component = UniversalComponents.TANK_COMPONENT.maybeGet(stack);
 		return component.orElse(null);
 	}
 
