@@ -179,25 +179,26 @@ public class InventoryComponentHelper {
 		//item components - first priority for items
 		addItemHook("cardinal-components-item", ItemComponentInvHook::getInstance);
 		addItemHook("iteminventory", ItemInvHook::getInstance);
-//		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
-		//TODO: why the fuck is this being so finnicky
-		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
-		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
-//		addDualHook("fluidity", FluidityInvHook::getInstance);
-		addBlockHook("fluidity", FluidityInvHook::getInstance);
-		addItemHook("fluidity", FluidityInvHook::getInstance);
+		addDualHook("libblockattributes_item", LBAInvHook::getInstance);
+//		addBlockHook("libblockattributes_item", LBAInvHook::getInstance);
+//		addItemHook("libblockattributes_item", LBAInvHook::getInstance);
+		addDualHook("fluidity", FluidityInvHook::getInstance);
+//		addBlockHook("fluidity", FluidityInvHook::getInstance);
+//		addItemHook("fluidity", FluidityInvHook::getInstance);
 		//TODO: Patchwork capabilities once it's out
 	}
 
+
+	//TODO: this might still be bad, we'll find out
 	private static void addBlockHook(String targetMod, Supplier<BlockInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addBlockHook(hook.get()));
+		IntegrationHandler.runIfPresent(targetMod, () -> () -> addBlockHook(hook.get()));
 	}
 
 	private static void addItemHook(String targetMod, Supplier<ItemInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addItemHook(hook.get()));
+		IntegrationHandler.runIfPresent(targetMod, () -> () -> addItemHook(hook.get()));
 	}
 
 	private static void addDualHook(String targetMod, Supplier<DualInventoryHook> hook) {
-		IntegrationHandler.runIfPresent(targetMod, () -> addDualHook(hook.get()));
+		IntegrationHandler.runIfPresent(targetMod, () -> () -> addDualHook(hook.get()));
 	}
 }

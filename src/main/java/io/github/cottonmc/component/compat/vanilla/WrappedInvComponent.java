@@ -84,7 +84,7 @@ public class WrappedInvComponent implements InventoryComponent {
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
 		ItemStack target = inv.getInvStack(slot);
 
-		if (!target.isItemEqualIgnoreDamage(stack)) {
+		if (!target.isEmpty() && !target.isItemEqualIgnoreDamage(stack)) {
 			//unstackable, can't merge!
 			return stack;
 		}

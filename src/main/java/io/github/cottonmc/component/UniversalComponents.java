@@ -46,8 +46,6 @@ public class UniversalComponents implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		EnergyTypes.init();
-		if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {
-			RebornEnergyTypes.init();
-		}
+		IntegrationHandler.runIfPresent("team_reborn_energy", () -> RebornEnergyTypes::init);
 	}
 }
