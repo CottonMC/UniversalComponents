@@ -39,6 +39,7 @@ public class EntityComponentHook implements InventoryComponentHelper.BlockInvent
 	@Nullable
 	public InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_INV_COMPONENT);
+		if (list.isEmpty()) return null;
 		return UniversalComponents.INVENTORY_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
@@ -52,6 +53,7 @@ public class EntityComponentHook implements InventoryComponentHelper.BlockInvent
 	@Override
 	public TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_TANK_COMPONENT);
+		if (list.isEmpty()) return null;
 		return UniversalComponents.TANK_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
