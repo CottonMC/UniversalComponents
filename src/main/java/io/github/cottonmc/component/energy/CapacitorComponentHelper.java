@@ -164,7 +164,7 @@ public class CapacitorComponentHelper {
 		IntegrationHandler.runIfPresent("cardinal-components-entity", () -> EntityComponentHook::initCap);
 		//item components - first priority for items
 		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initCap);
-		IntegrationHandler.runIfPresent("energy", () -> EnergyHook::init);
+		IntegrationHandler.runIfPresent("team_reborn_energy", () -> EnergyHook::init);
 		//TODO: Patchwork capabilities once it's out
 	}
 }
