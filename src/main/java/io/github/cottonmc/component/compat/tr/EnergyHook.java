@@ -1,9 +1,7 @@
 package io.github.cottonmc.component.compat.tr;
 
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +10,6 @@ import net.minecraft.world.World;
 import team.reborn.energy.Energy;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class EnergyHook implements CapacitorComponentHelper.DualCapacitorHook {
 	public static final EnergyHook INSTANCE = new EnergyHook();
@@ -22,19 +19,19 @@ public class EnergyHook implements CapacitorComponentHelper.DualCapacitorHook {
 		Energy.registerHolder(object -> {
 			if (object instanceof BlockEntity) {
 				BlockEntity be = (BlockEntity)object;
-				return BlockComponentProvider.get(be.getCachedState()).hasComponent(be.getWorld(), be.getPos(), UniversalComponents.CAPACITOR_COMPONENT, null);
+				return CapacitorComponentHelper.hasCapacitorComponentNoTR(be.getWorld(), be.getPos(), null);
 			} else if (object instanceof ItemStack) {
-				return UniversalComponents.CAPACITOR_COMPONENT.maybeGet(object).isPresent();
+				return CapacitorComponentHelper.hasCapacitorComponentNoTR((ItemStack)object);
 			}
 			return false;
 		}, object -> {
 			if (object instanceof BlockEntity) {
 				BlockEntity be = (BlockEntity) object;
-				CapacitorComponent comp = BlockComponentProvider.get(be.getCachedState()).getComponent(be.getWorld(), be.getPos(), UniversalComponents.CAPACITOR_COMPONENT, null);
+				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponentNoTR(be.getWorld(), be.getPos(), null);
 				if (comp != null) new EnergyStorageWrapper(comp);
 			} else if (object instanceof ItemStack) {
-				Optional<CapacitorComponent> comp = UniversalComponents.CAPACITOR_COMPONENT.maybeGet(object);
-				if (comp.isPresent()) return new EnergyStorageWrapper(comp.get());
+				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponentNoTR((ItemStack)object);
+				if (comp != null) return new EnergyStorageWrapper(comp);
 			}
 			return null;
 		});

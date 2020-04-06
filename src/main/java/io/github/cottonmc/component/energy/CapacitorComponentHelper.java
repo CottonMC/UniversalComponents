@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import team.reborn.energy.EnergyHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -166,6 +165,50 @@ public class CapacitorComponentHelper {
 		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initCap);
 		IntegrationHandler.runIfPresent("team_reborn_energy", () -> EnergyHook::init);
 		//TODO: Patchwork capabilities once it's out
+	}
+
+	//to prevent inf loops in TechReborn Energy, don't call yourself
+	public static boolean hasCapacitorComponentNoTR(World world, BlockPos pos, @Nullable Direction dir) {
+		//check registered block hooks
+		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
+			if (hook == EnergyHook.INSTANCE) continue;
+			if (hook.hasCapComponent(world, pos, dir)) return true;
+		}
+		//no special hooks, so return null
+		return false;
+	}
+
+	//to prevent inf loops in TechReborn Energy, don't call yourself
+	@Nullable
+	public static CapacitorComponent getCapacitorComponentNoTR(World world, BlockPos pos, @Nullable Direction dir) {
+		//check registered block hooks
+		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
+			if (hook == EnergyHook.INSTANCE) continue;
+			CapacitorComponent component = hook.getCapComponent(world, pos, dir);
+			if (component != null) return component;
+		}
+		//no special hooks, so return null
+		return null;
+	}
+
+	//to prevent inf loops in TechReborn Energy, don't call yourself
+	public static boolean hasCapacitorComponentNoTR(ItemStack stack) {
+		for (ItemCapacitorHook hook : ITEM_HOOKS) {
+			if (hook == EnergyHook.INSTANCE) continue;
+			if (hook.hasCapComponent(stack)) return true;
+		}
+		return false;
+	}
+
+	//to prevent inf loops in TechReborn Energy, don't call yourself
+	@Nullable
+	public static CapacitorComponent getCapacitorComponentNoTR(ItemStack stack) {
+		for (ItemCapacitorHook hook : ITEM_HOOKS) {
+			if (hook == EnergyHook.INSTANCE) continue;
+			CapacitorComponent component = hook.getCapComponent(stack);
+			if (component != null) return component;
+		}
+		return null;
 	}
 }
 
