@@ -3,6 +3,7 @@ package io.github.cottonmc.component.item;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.Observable;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
+import io.github.cottonmc.component.serializer.StackSerializer;
 import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.inventory.Inventory;
@@ -204,7 +205,7 @@ public interface InventoryComponent extends Component, Observable {
 		ListTag items = tag.getList("Items", NbtType.COMPOUND);
 		for (int i = 0; i < items.size(); i++) {
 			CompoundTag stackTag = (CompoundTag) items.get(i);
-			setStack(i, ItemStack.fromTag(stackTag));
+			setStack(i, StackSerializer.fromTag(stackTag));
 		}
 	}
 
@@ -212,7 +213,7 @@ public interface InventoryComponent extends Component, Observable {
 	default CompoundTag toTag(CompoundTag tag) {
 		ListTag items = new ListTag();
 		for (ItemStack stack : getStacks()) {
-			items.add(stack.toTag(new CompoundTag()));
+			items.add(StackSerializer.toTag(stack, new CompoundTag()));
 		}
 		tag.put("Items", items);
 		return tag;
