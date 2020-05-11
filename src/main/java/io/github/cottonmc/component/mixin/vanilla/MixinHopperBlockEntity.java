@@ -23,6 +23,7 @@ public abstract class MixinHopperBlockEntity extends BlockEntity {
 		super(type);
 	}
 
+	//should only search for entities, since that's all we care about at this point in injection
 	@Inject(method = "getInventoryAt(Lnet/minecraft/world/World;DDD)Lnet/minecraft/inventory/Inventory;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;Ljava/util/function/Predicate;)Ljava/util/List;"), cancellable = true)
 	private static void injectInventoryComponents(World world, double x, double y, double z, CallbackInfoReturnable<Inventory> info) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntityComponentHook.HAS_INV_COMPONENT);
