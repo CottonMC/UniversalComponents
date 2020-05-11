@@ -60,5 +60,10 @@ public class BlockComponentHook implements InventoryComponentHelper.BlockInvento
 		return BlockComponentProvider.get(world.getBlockState(pos)).getComponent(world, pos, UniversalComponents.CAPACITOR_COMPONENT, dir);
 	}
 
+	@Override
+	public String getId() {
+		return "cardinal-components-block";
+	}
+
 	private BlockComponentHook() { }
 }

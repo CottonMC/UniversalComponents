@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class LBAHook implements InventoryComponentHelper.DualInventoryHook {
-	private static final LBAHook INSTANCE = new LBAHook();
+public class LBAInvHook implements InventoryComponentHelper.DualInventoryHook {
+	private static final LBAInvHook INSTANCE = new LBAInvHook();
 
 	public static void initInv() {
 		InventoryComponentHelper.addDualHook(INSTANCE);
@@ -43,5 +43,10 @@ public class LBAHook implements InventoryComponentHelper.DualInventoryHook {
 		return new WrappedInvAttributeComponent(inv);
 	}
 
-	private LBAHook() { }
+	@Override
+	public String getId() {
+		return "lba-items";
+	}
+
+	private LBAInvHook() { }
 }

@@ -19,18 +19,18 @@ public class EnergyHook implements CapacitorComponentHelper.DualCapacitorHook {
 		Energy.registerHolder(object -> {
 			if (object instanceof BlockEntity) {
 				BlockEntity be = (BlockEntity)object;
-				return CapacitorComponentHelper.hasCapacitorComponentNoTR(be.getWorld(), be.getPos(), null);
+				return CapacitorComponentHelper.hasCapacitorComponent(be.getWorld(), be.getPos(), null, "reborn-energy");
 			} else if (object instanceof ItemStack) {
-				return CapacitorComponentHelper.hasCapacitorComponentNoTR((ItemStack)object);
+				return CapacitorComponentHelper.hasCapacitorComponent((ItemStack)object, "reborn-energy");
 			}
 			return false;
 		}, object -> {
 			if (object instanceof BlockEntity) {
 				BlockEntity be = (BlockEntity) object;
-				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponentNoTR(be.getWorld(), be.getPos(), null);
+				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponent(be.getWorld(), be.getPos(), null, "reborn-energy");
 				if (comp != null) new EnergyStorageWrapper(comp);
 			} else if (object instanceof ItemStack) {
-				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponentNoTR((ItemStack)object);
+				CapacitorComponent comp = CapacitorComponentHelper.getCapacitorComponent((ItemStack)object, "reborn-energy");
 				if (comp != null) return new EnergyStorageWrapper(comp);
 			}
 			return null;
@@ -64,4 +64,11 @@ public class EnergyHook implements CapacitorComponentHelper.DualCapacitorHook {
 	public CapacitorComponent getCapComponent(ItemStack stack) {
 		return new WrappedEnergyHandler(() -> Energy.of(stack));
 	}
+
+	@Override
+	public String getId() {
+		return "reborn-energy";
+	}
+
+	private EnergyHook() { }
 }

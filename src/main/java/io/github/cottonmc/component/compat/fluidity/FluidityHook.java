@@ -35,5 +35,10 @@ public class FluidityHook implements InventoryComponentHelper.DualInventoryHook 
 		return null;
 	}
 
+	@Override
+	public String getId() {
+		return "fluidity";
+	}
+
 	private FluidityHook() { }
 }

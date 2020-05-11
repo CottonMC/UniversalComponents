@@ -77,7 +77,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 
 	@Override
 	public void setStack(int slot, ItemStack stack) {
-		stacks.set(slot, stack);
+		if (isAcceptableStack(slot, stack)) stacks.set(slot, stack);
 		onChanged();
 	}
 
@@ -85,8 +85,8 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
 		ItemStack target = stacks.get(slot);
 
-		if (!target.isEmpty() && !target.isItemEqualIgnoreDamage(stack))  {
-			//unstackable, can't merge!
+		if ((!target.isEmpty() && !target.isItemEqualIgnoreDamage(stack)) || !isAcceptableStack(slot, stack))  {
+			//unstackable or unacceptable, can't merge!
 			return stack;
 		}
 		int count = target.getCount();

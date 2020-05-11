@@ -132,7 +132,7 @@ public interface InventoryComponent extends Component, Observable {
 	 * @return Whether this stack may be inserted into this slot.
 	 */
 	default boolean isAcceptableStack(int slot, ItemStack stack) {
-		return true;
+		return !InventoryComponentHelper.hasInventoryComponent(stack);
 	}
 
 	/**

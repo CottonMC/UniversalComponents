@@ -26,5 +26,10 @@ public class ItemInvHook implements InventoryComponentHelper.ItemInventoryHook {
 		return null;
 	}
 
+	@Override
+	public String getId() {
+		return "item-inventory";
+	}
+
 	private ItemInvHook() { }
 }

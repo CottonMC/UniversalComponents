@@ -5,7 +5,7 @@ import io.github.cottonmc.component.compat.core.EntityComponentHook;
 import io.github.cottonmc.component.compat.core.ItemComponentHook;
 import io.github.cottonmc.component.compat.fluidity.FluidityHook;
 import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
-import io.github.cottonmc.component.compat.lba.LBAHook;
+import io.github.cottonmc.component.compat.lba.LBAInvHook;
 import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
 import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
 import io.github.cottonmc.component.api.IntegrationHandler;
@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class InventoryComponentHelper {
 
@@ -36,12 +35,26 @@ public class InventoryComponentHelper {
 	 * @return Whether this block has an inventory we can access.
 	 */
 	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return hasInventoryComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Query whether a block has a compatible inventory component, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether this block has an inventory we can access.
+	 */
+	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasInvComponent(world, pos, dir)) return true;
 		}
 		//no special hooks, so fall back to vanilla
-		return HopperBlockEntity.getInventoryAt(world, pos) != null;
+		if (!ignore.equals("minecraft")) return HopperBlockEntity.getInventoryAt(world, pos) != null;
+		return false;
 	}
 
 	/**
@@ -53,18 +66,34 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return getInventoryComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a block, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			InventoryComponent component = hook.getInvComponent(world, pos, dir);
 			if (component != null) return component;
 		}
 		//no special hooks, so fall back to vanilla
-		Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
-		if (inv instanceof SidedInventory) {
-			return new WrappedSidedInvComponent((SidedInventory)inv, dir);
-		}
-		if (inv != null) {
-			return new WrappedInvComponent(inv);
+		if (!ignore.equals("minecraft")) {
+			Inventory inv = HopperBlockEntity.getInventoryAt(world, pos);
+			if (inv instanceof SidedInventory) {
+				return new WrappedSidedInvComponent((SidedInventory) inv, dir);
+			}
+			if (inv != null) {
+				return new WrappedInvComponent(inv);
+			}
 		}
 		return null;
 	}
@@ -75,7 +104,18 @@ public class InventoryComponentHelper {
 	 * @return Whether a this stack has an inventory we can access.
 	 */
 	public static boolean hasInventoryComponent(ItemStack stack) {
+		return hasInventoryComponent(stack, "");
+	}
+
+	/**
+	 * Query whether a stack has a compatible inventory component, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether a this stack has an inventory we can access.
+	 */
+	public static boolean hasInventoryComponent(ItemStack stack, String ignore) {
 		for (ItemInventoryHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasInvComponent(stack)) return true;
 		}
 		return false;
@@ -88,7 +128,19 @@ public class InventoryComponentHelper {
 	 */
 	@Nullable
 	public static InventoryComponent getInventoryComponent(ItemStack stack) {
+		return getInventoryComponent(stack, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a stack, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static InventoryComponent getInventoryComponent(ItemStack stack, String ignore) {
 		for (ItemInventoryHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			InventoryComponent component = hook.getInvComponent(stack);
 			if (component != null) return component;
 		}
@@ -144,6 +196,8 @@ public class InventoryComponentHelper {
 		 */
 		@Nullable
 		InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir);
+
+		String getId();
 	}
 
 	/**
@@ -164,6 +218,8 @@ public class InventoryComponentHelper {
 		 */
 		@Nullable
 		InventoryComponent getInvComponent(ItemStack stack);
+
+		String getId();
 	}
 
 	/**
@@ -179,7 +235,7 @@ public class InventoryComponentHelper {
 		//item components - first priority for items
 		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initInventory);
 		IntegrationHandler.runIfPresent("iteminventory", () -> ItemInvHook::init);
-		IntegrationHandler.runIfPresent("libblockattributes_item", () -> LBAHook::initInv);
+		IntegrationHandler.runIfPresent("libblockattributes_item", () -> LBAInvHook::initInv);
 		IntegrationHandler.runIfPresent("fluidity", () -> FluidityHook::initInv);
 		//TODO: Patchwork capabilities once it's out
 	}

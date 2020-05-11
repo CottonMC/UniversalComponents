@@ -37,8 +37,8 @@ public class MixinItemAttributesBlock {
 			SidedInventory sidedInv;
 			FixedItemInv wrapper;
 			//BEGIN INJECTION
-			if (InventoryComponentHelper.hasInventoryComponent(world, pos, blockSide)) {
-				InventoryComponent component = InventoryComponentHelper.getInventoryComponent(world, pos, blockSide);
+			if (InventoryComponentHelper.hasInventoryComponent(world, pos, blockSide, "lba-items")) {
+				InventoryComponent component = InventoryComponentHelper.getInventoryComponent(world, pos, blockSide, "lba-items");
 				list.add(convertor.apply(new AttributeWrapper(component)));
 				//END INJECTION
 			} else if (block instanceof InventoryProvider) {

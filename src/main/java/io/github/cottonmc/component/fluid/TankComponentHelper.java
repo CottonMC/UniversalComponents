@@ -30,8 +30,21 @@ public class TankComponentHelper {
 	 * @return Whether this block has an inventory we can access.
 	 */
 	public static boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return hasTankComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Query whether a block has a compatible inventory component, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether this block has an inventory we can access.
+	 */
+	public static boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasTankComponent(world, pos, dir)) return true;
 		}
 		//no special hooks, so return false
@@ -47,8 +60,22 @@ public class TankComponentHelper {
 	 */
 	@Nullable
 	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return getTankComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a block, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			TankComponent component = hook.getTankComponent(world, pos, dir);
 			if (component != null) return component;
 		}
@@ -62,7 +89,18 @@ public class TankComponentHelper {
 	 * @return Whether a this stack has an inventory we can access.
 	 */
 	public static boolean hasTankComponent(ItemStack stack) {
+		return hasTankComponent(stack, "");
+	}
+
+	/**
+	 * Query whether a stack has a compatible inventory component, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether a this stack has an inventory we can access.
+	 */
+	public static boolean hasTankComponent(ItemStack stack, String ignore) {
 		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasTankComponent(stack)) return true;
 		}
 		return false;
@@ -75,7 +113,19 @@ public class TankComponentHelper {
 	 */
 	@Nullable
 	public static TankComponent getTankComponent(ItemStack stack) {
+		return getTankComponent(stack, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a stack, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static TankComponent getTankComponent(ItemStack stack, String ignore) {
 		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			TankComponent component = hook.getTankComponent(stack);
 			if (component != null) return component;
 		}
@@ -131,6 +181,8 @@ public class TankComponentHelper {
 		 */
 		@Nullable
 		TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir);
+
+		String getId();
 	}
 
 	/**
@@ -151,6 +203,8 @@ public class TankComponentHelper {
 		 */
 		@Nullable
 		TankComponent getTankComponent(ItemStack stack);
+
+		String getId();
 	}
 
 	/**

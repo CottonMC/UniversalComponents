@@ -61,5 +61,10 @@ public class ItemComponentHook implements InventoryComponentHelper.ItemInventory
 		return component.orElse(null);
 	}
 
+	@Override
+	public String getId() {
+		return "cardinal-components-item";
+	}
+
 	private ItemComponentHook() { }
 }

@@ -79,5 +79,10 @@ public class EntityComponentHook implements InventoryComponentHelper.BlockInvent
 		return UniversalComponents.CAPACITOR_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
+	@Override
+	public String getId() {
+		return "cardinal-components-entity";
+	}
+
 	private EntityComponentHook() { }
 }

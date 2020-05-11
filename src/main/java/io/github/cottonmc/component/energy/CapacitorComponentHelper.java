@@ -28,8 +28,21 @@ public class CapacitorComponentHelper {
 	 * @return Whether this block has an inventory we can access.
 	 */
 	public static boolean hasCapacitorComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return hasCapacitorComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Query whether a block has a compatible inventory component, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether this block has an inventory we can access.
+	 */
+	public static boolean hasCapacitorComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasCapComponent(world, pos, dir)) return true;
 		}
 		//no special hooks, so return null
@@ -45,8 +58,22 @@ public class CapacitorComponentHelper {
 	 */
 	@Nullable
 	public static CapacitorComponent getCapacitorComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return getCapacitorComponent(world, pos, dir, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a block, used from inside other hooks.
+	 * @param world The world the block is in.
+	 * @param pos The position the block is at.
+	 * @param dir The direction to access the inventory from, or null.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static CapacitorComponent getCapacitorComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			CapacitorComponent component = hook.getCapComponent(world, pos, dir);
 			if (component != null) return component;
 		}
@@ -60,7 +87,18 @@ public class CapacitorComponentHelper {
 	 * @return Whether a this stack has an inventory we can access.
 	 */
 	public static boolean hasCapacitorComponent(ItemStack stack) {
+		return hasCapacitorComponent(stack, "");
+	}
+
+	/**
+	 * Query whether a stack has a compatible inventory component, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return Whether a this stack has an inventory we can access.
+	 */
+	public static boolean hasCapacitorComponent(ItemStack stack, String ignore) {
 		for (ItemCapacitorHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasCapComponent(stack)) return true;
 		}
 		return false;
@@ -73,7 +111,19 @@ public class CapacitorComponentHelper {
 	 */
 	@Nullable
 	public static CapacitorComponent getCapacitorComponent(ItemStack stack) {
+		return getCapacitorComponent(stack, "");
+	}
+
+	/**
+	 * Get a compatible inventory component on a stack, used from inside other hooks.
+	 * @param stack The stack to check on.
+	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
+	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
+	 */
+	@Nullable
+	public static CapacitorComponent getCapacitorComponent(ItemStack stack, String ignore) {
 		for (ItemCapacitorHook hook : ITEM_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
 			CapacitorComponent component = hook.getCapComponent(stack);
 			if (component != null) return component;
 		}
@@ -129,6 +179,8 @@ public class CapacitorComponentHelper {
 		 */
 		@Nullable
 		CapacitorComponent getCapComponent(World world, BlockPos pos, @Nullable Direction dir);
+
+		String getId();
 	}
 
 	/**
@@ -149,6 +201,8 @@ public class CapacitorComponentHelper {
 		 */
 		@Nullable
 		CapacitorComponent getCapComponent(ItemStack stack);
+
+		String getId();
 	}
 
 	/**
@@ -165,50 +219,6 @@ public class CapacitorComponentHelper {
 		IntegrationHandler.runIfPresent("cardinal-components-item", () -> ItemComponentHook::initCap);
 		IntegrationHandler.runIfPresent("team_reborn_energy", () -> EnergyHook::init);
 		//TODO: Patchwork capabilities once it's out
-	}
-
-	//to prevent inf loops in TechReborn Energy, don't call yourself
-	public static boolean hasCapacitorComponentNoTR(World world, BlockPos pos, @Nullable Direction dir) {
-		//check registered block hooks
-		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
-			if (hook == EnergyHook.INSTANCE) continue;
-			if (hook.hasCapComponent(world, pos, dir)) return true;
-		}
-		//no special hooks, so return null
-		return false;
-	}
-
-	//to prevent inf loops in TechReborn Energy, don't call yourself
-	@Nullable
-	public static CapacitorComponent getCapacitorComponentNoTR(World world, BlockPos pos, @Nullable Direction dir) {
-		//check registered block hooks
-		for (BlockCapacitorHook hook : BLOCK_HOOKS) {
-			if (hook == EnergyHook.INSTANCE) continue;
-			CapacitorComponent component = hook.getCapComponent(world, pos, dir);
-			if (component != null) return component;
-		}
-		//no special hooks, so return null
-		return null;
-	}
-
-	//to prevent inf loops in TechReborn Energy, don't call yourself
-	public static boolean hasCapacitorComponentNoTR(ItemStack stack) {
-		for (ItemCapacitorHook hook : ITEM_HOOKS) {
-			if (hook == EnergyHook.INSTANCE) continue;
-			if (hook.hasCapComponent(stack)) return true;
-		}
-		return false;
-	}
-
-	//to prevent inf loops in TechReborn Energy, don't call yourself
-	@Nullable
-	public static CapacitorComponent getCapacitorComponentNoTR(ItemStack stack) {
-		for (ItemCapacitorHook hook : ITEM_HOOKS) {
-			if (hook == EnergyHook.INSTANCE) continue;
-			CapacitorComponent component = hook.getCapComponent(stack);
-			if (component != null) return component;
-		}
-		return null;
 	}
 }
 
