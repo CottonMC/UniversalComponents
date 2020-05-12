@@ -11,13 +11,15 @@ public class ItemInvHook implements InventoryComponentHelper.ItemInventoryHook {
 	private static final ItemInvHook INSTANCE = new ItemInvHook();
 
 	public static void init() {
-		InventoryComponentHelper.addItemHook(INSTANCE);
+		InventoryComponentHelper.INSTANCE.addItemHook(INSTANCE);
 	}
 
+	@Override
 	public boolean hasInvComponent(ItemStack stack) {
 		return stack.getItem() instanceof ItemInventory;
 	}
 
+	@Override
 	@Nullable
 	public InventoryComponent getInvComponent(ItemStack stack) {
 		if (stack.getItem() instanceof ItemInventory) {

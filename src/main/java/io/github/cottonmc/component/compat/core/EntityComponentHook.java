@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -22,15 +23,15 @@ public class EntityComponentHook implements InventoryComponentHelper.BlockInvent
 	private static final EntityComponentHook INSTANCE = new EntityComponentHook();
 
 	public static void initInventory() {
-		InventoryComponentHelper.addBlockHook(INSTANCE);
+		InventoryComponentHelper.INSTANCE.addBlockHook(INSTANCE);
 	}
 
 	public static void initTank() {
-		TankComponentHelper.addBlockHook(INSTANCE);
+		TankComponentHelper.INSTANCE.addBlockHook(INSTANCE);
 	}
 
 	public static void initCap() {
-		CapacitorComponentHelper.addBlockHook(INSTANCE);
+		CapacitorComponentHelper.INSTANCE.addBlockHook(INSTANCE);
 	}
 
 	public static final Predicate<Entity> HAS_INV_COMPONENT = entity -> UniversalComponents.INVENTORY_COMPONENT.maybeGet(entity).isPresent();
@@ -39,41 +40,82 @@ public class EntityComponentHook implements InventoryComponentHelper.BlockInvent
 
 	public static final Predicate<Entity> HAS_CAP_COMPONENT = entity -> UniversalComponents.CAPACITOR_COMPONENT.maybeGet(entity).isPresent();
 
-	public boolean hasInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	@Override
+	public boolean hasInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return false;
+	}
+
+	@Override
+	@Nullable
+	public InventoryComponent getInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return null;
+	}
+
+	@Override
+	public boolean hasExtendedInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_INV_COMPONENT);
 		return !list.isEmpty();
 	}
 
 	@Nullable
-	public InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	@Override
+	public InventoryComponent getExtendedInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_INV_COMPONENT);
 		if (list.isEmpty()) return null;
 		return UniversalComponents.INVENTORY_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
 	@Override
-	public boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public boolean hasTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public TankComponent getTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return null;
+	}
+
+	@Override
+	public boolean hasExtendedTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_TANK_COMPONENT);
 		return !list.isEmpty();
 	}
 
 	@Nullable
 	@Override
-	public TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public TankComponent getExtendedTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_TANK_COMPONENT);
 		if (list.isEmpty()) return null;
 		return UniversalComponents.TANK_COMPONENT.get(list.get(new Random().nextInt(list.size())));
 	}
 
 	@Override
-	public boolean hasCapComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public boolean hasCapComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public CapacitorComponent getCapComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
+		//can't access entities from just a BlockView!
+		return null;
+	}
+
+	@Override
+	public boolean hasExtendedCapComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_CAP_COMPONENT);
 		return !list.isEmpty();
 	}
 
 	@Nullable
 	@Override
-	public CapacitorComponent getCapComponent(World world, BlockPos pos, @Nullable Direction dir) {
+	public CapacitorComponent getExtendedCapComponent(World world, BlockPos pos, @Nullable Direction dir) {
 		List<Entity> list = world.getEntities((Entity)null, new Box(pos.getX() - 0.5D, pos.getY() - 0.5D, pos.getZ() - 0.5D, pos.getX() + 0.5D, pos.getY()+ 0.5D, pos.getZ() + 0.5D), HAS_CAP_COMPONENT);
 		if (list.isEmpty()) return null;
 		return UniversalComponents.CAPACITOR_COMPONENT.get(list.get(new Random().nextInt(list.size())));

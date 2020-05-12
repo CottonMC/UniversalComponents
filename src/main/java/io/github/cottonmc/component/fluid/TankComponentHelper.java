@@ -1,5 +1,6 @@
 package io.github.cottonmc.component.fluid;
 
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.api.IntegrationHandler;
 import io.github.cottonmc.component.compat.core.BlockComponentHook;
 import io.github.cottonmc.component.compat.core.EntityComponentHook;
@@ -7,6 +8,7 @@ import io.github.cottonmc.component.compat.core.ItemComponentHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -17,31 +19,36 @@ import java.util.List;
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
  * CROSS-COMPATIBILITY WILL BE IMPLEMENTED WHEN API STABILIZES; PLEASE BE PATIENT
  */
-public class TankComponentHelper {
-	private static final List<TankComponentHelper.BlockTankHook> BLOCK_HOOKS = new ArrayList<>();
+public class TankComponentHelper implements ComponentHelper<TankComponent> {
+	public static final TankComponentHelper INSTANCE = new TankComponentHelper();
 
-	private static final List<TankComponentHelper.ItemTankHook> ITEM_HOOKS = new ArrayList<>();
+	private final List<TankComponentHelper.BlockTankHook> BLOCK_HOOKS = new ArrayList<>();
 
-	/**
-	 * Query whether a block has a compatible inventory component.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @return Whether this block has an inventory we can access.
-	 */
+	private final List<TankComponentHelper.ItemTankHook> ITEM_HOOKS = new ArrayList<>();
+
+	//legacy hooks - will be removed on 1.0 release
+	@Deprecated
 	public static boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		return hasTankComponent(world, pos, dir, "");
+		return INSTANCE.hasExtendedComponent(world, pos, dir);
 	}
 
-	/**
-	 * Query whether a block has a compatible inventory component, used from inside other hooks.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return Whether this block has an inventory we can access.
-	 */
-	public static boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+	@Deprecated
+	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return INSTANCE.getExtendedComponent(world, pos, dir);
+	}
+
+	@Deprecated
+	public static boolean hasTankComponent(ItemStack stack) {
+		return INSTANCE.hasComponent(stack);
+	}
+
+	@Deprecated
+	public static TankComponent getTankComponent(ItemStack stack) {
+		return INSTANCE.getComponent(stack);
+	}
+
+	@Override
+	public boolean hasComponent(BlockView world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
@@ -51,54 +58,43 @@ public class TankComponentHelper {
 		return false;
 	}
 
-	/**
-	 * Get a compatible inventory component on a block.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
-	 */
 	@Nullable
-	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		return getTankComponent(world, pos, dir, "");
-	}
-
-	/**
-	 * Get a compatible inventory component on a block, used from inside other hooks.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
-	 */
-	@Nullable
-	public static TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+	public TankComponent getComponent(BlockView world, BlockPos pos, @Nullable Direction direction, String ignore) {
 		//check registered block hooks
 		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
-			TankComponent component = hook.getTankComponent(world, pos, dir);
+			TankComponent component = hook.getTankComponent(world, pos, direction);
 			if (component != null) return component;
 		}
 		//no special hooks, so return null
 		return null;
 	}
 
-	/**
-	 * Query whether a stack has a compatible inventory component.
-	 * @param stack The stack to check on.
-	 * @return Whether a this stack has an inventory we can access.
-	 */
-	public static boolean hasTankComponent(ItemStack stack) {
-		return hasTankComponent(stack, "");
+	@Override
+	public boolean hasExtendedComponent(World world, BlockPos pos, @Nullable Direction direction, String ignore) {
+		//check registered block hooks
+		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
+			if (hook.hasExtendedTankComponent(world, pos, direction)) return true;
+		}
+		//no special hooks, so return false
+		return false;
 	}
 
-	/**
-	 * Query whether a stack has a compatible inventory component, used from inside other hooks.
-	 * @param stack The stack to check on.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return Whether a this stack has an inventory we can access.
-	 */
-	public static boolean hasTankComponent(ItemStack stack, String ignore) {
+	@Override
+	public TankComponent getExtendedComponent(World world, BlockPos pos, @Nullable Direction direction, String ignore) {
+		//check registered block hooks
+		for (TankComponentHelper.BlockTankHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
+			TankComponent component = hook.getExtendedTankComponent(world, pos, direction);
+			if (component != null) return component;
+		}
+		//no special hooks, so return null
+		return null;
+	}
+
+	@Override
+	public boolean hasComponent(ItemStack stack, String ignore) {
 		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasTankComponent(stack)) return true;
@@ -106,24 +102,9 @@ public class TankComponentHelper {
 		return false;
 	}
 
-	/**
-	 * Get a compatible inventory component on a stack.
-	 * @param stack The stack to check on.
-	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
-	 */
+	@Override
 	@Nullable
-	public static TankComponent getTankComponent(ItemStack stack) {
-		return getTankComponent(stack, "");
-	}
-
-	/**
-	 * Get a compatible inventory component on a stack, used from inside other hooks.
-	 * @param stack The stack to check on.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
-	 */
-	@Nullable
-	public static TankComponent getTankComponent(ItemStack stack, String ignore) {
+	public TankComponent getComponent(ItemStack stack, String ignore) {
 		for (TankComponentHelper.ItemTankHook hook : ITEM_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			TankComponent component = hook.getTankComponent(stack);
@@ -136,7 +117,7 @@ public class TankComponentHelper {
 	 * Add a new hook for accessing an inventory stored on a block or an entity at a given position.
 	 * @param hook The hook to add.
 	 */
-	public static void addBlockHook(TankComponentHelper.BlockTankHook hook) {
+	public void addBlockHook(TankComponentHelper.BlockTankHook hook) {
 		BLOCK_HOOKS.add(hook);
 	}
 
@@ -144,7 +125,7 @@ public class TankComponentHelper {
 	 * Add a new hook for accessing an inventory stored on an item stack.
 	 * @param hook The hook to add.
 	 */
-	public static void addItemHook(TankComponentHelper.ItemTankHook hook) {
+	public void addItemHook(TankComponentHelper.ItemTankHook hook) {
 		ITEM_HOOKS.add(hook);
 	}
 
@@ -152,7 +133,7 @@ public class TankComponentHelper {
 	 * Add a new hook for accessing both inventories stored on blocks or entities and on item stacks.
 	 * @param hook The hook to add.
 	 */
-	public static void addDualHook(TankComponentHelper.DualTankHook hook) {
+	public void addDualHook(TankComponentHelper.DualTankHook hook) {
 		BLOCK_HOOKS.add(hook);
 		ITEM_HOOKS.add(hook);
 	}
@@ -170,7 +151,7 @@ public class TankComponentHelper {
 		 * @param dir The direction to test from, or null.
 		 * @return Whether a compatible inventory exists here.
 		 */
-		boolean hasTankComponent(World world, BlockPos pos, @Nullable Direction dir);
+		boolean hasTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir);
 
 		/**
 		 * Get a compatible inventory in the world.
@@ -180,7 +161,30 @@ public class TankComponentHelper {
 		 * @return A wrapped form of a compatible inventory, or null if one doesn't exist.
 		 */
 		@Nullable
-		TankComponent getTankComponent(World world, BlockPos pos, @Nullable Direction dir);
+		TankComponent getTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir);
+
+		/**
+		 * Test for a compatible tank in the world. Supports entities.
+		 * @param world The world to test in.
+		 * @param pos The position to test at.
+		 * @param dir The direction to test from, or null.
+		 * @return Whether a compatible tank exists here.
+		 */
+		default boolean hasExtendedTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+			return hasTankComponent(world, pos, dir);
+		}
+
+		/**
+		 * Get a compatible tank in the world. Supports entities.
+		 * @param world The world to get in.
+		 * @param pos The position to get at.
+		 * @param dir The direction to get from, or null.
+		 * @return A wrapped form of a compatible tank, or null if one doesn't exist.
+		 */
+		@Nullable
+		default TankComponent getExtendedTankComponent(World world, BlockPos pos, @Nullable Direction dir) {
+			return getTankComponent(world, pos, dir);
+		}
 
 		String getId();
 	}

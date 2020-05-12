@@ -1,5 +1,6 @@
 package io.github.cottonmc.component.mixin.vanilla;
 
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.vanilla.InvBEWrapper;
 import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
@@ -23,10 +24,10 @@ public abstract class MixinBlock implements InventoryProvider {
 	//TODO: should this logic just go in MixinHopperBlockEntity instead? Does this even actually work?
 	@Override
 	public SidedInventory getInventory(BlockState state, IWorld world, BlockPos pos) {
-		if (InventoryComponentHelper.hasInventoryComponent((World)world, pos, null, "minecraft")) {
-			InventoryComponent comp = InventoryComponentHelper.getInventoryComponent((World)world, pos, null, "minecraft");
+		if (ComponentHelper.INVENTORY.hasComponent(world, pos, null, "minecraft")) {
+			InventoryComponent comp = ComponentHelper.INVENTORY.getComponent(world, pos, null, "minecraft");
 			if (comp.asLocalInventory(world, pos) != null) return comp.asLocalInventory(world, pos);
-			return SidedInventoryWrapper.of(side -> InventoryComponentHelper.getInventoryComponent((World)world, pos, side, "minecraft"));
+			return SidedInventoryWrapper.of(side -> ComponentHelper.INVENTORY.getComponent(world, pos, side, "minecraft"));
 		}
 		//necessary due to our forcing everything to have an inv provider
 		BlockEntity be = world.getBlockEntity(pos);

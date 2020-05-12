@@ -16,15 +16,15 @@ public class ItemComponentHook implements InventoryComponentHelper.ItemInventory
 	private static final ItemComponentHook INSTANCE = new ItemComponentHook();
 
 	public static void initInventory() {
-		InventoryComponentHelper.addItemHook(INSTANCE);
+		InventoryComponentHelper.INSTANCE.addItemHook(INSTANCE);
 	}
 
 	public static void initTank() {
-		TankComponentHelper.addItemHook(INSTANCE);
+		TankComponentHelper.INSTANCE.addItemHook(INSTANCE);
 	}
 
 	public static void initCap() {
-		CapacitorComponentHelper.addItemHook(INSTANCE);
+		CapacitorComponentHelper.INSTANCE.addItemHook(INSTANCE);
 	}
 
 	public boolean hasInvComponent(ItemStack stack) {

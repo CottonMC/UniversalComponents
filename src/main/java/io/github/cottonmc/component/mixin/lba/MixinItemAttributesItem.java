@@ -6,6 +6,7 @@ import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public class MixinItemAttributesItem {
 	@Inject(method = "appendItemAttributes", at = @At("HEAD"), remap = false)
 	private static <T> void injectComponentAdder(Reference<ItemStack> ref, LimitedConsumer<ItemStack> access, ItemAttributeList<T> list, Function<FixedItemInv, T> convertor, CallbackInfo info) {
 		ItemStack stack = ref.get();
-		if (InventoryComponentHelper.hasInventoryComponent(stack, "lba-items")) {
+		if (ComponentHelper.INVENTORY.hasComponent(stack, "lba-items")) {
 			list.add(convertor.apply(new AttributeWrapper(UniversalComponents.INVENTORY_COMPONENT.get(stack))));
 		}
 	}

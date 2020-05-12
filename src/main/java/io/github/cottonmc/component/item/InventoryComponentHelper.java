@@ -1,88 +1,139 @@
 package io.github.cottonmc.component.item;
 
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.core.BlockComponentHook;
 import io.github.cottonmc.component.compat.core.EntityComponentHook;
 import io.github.cottonmc.component.compat.core.ItemComponentHook;
 import io.github.cottonmc.component.compat.fluidity.FluidityHook;
 import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
 import io.github.cottonmc.component.compat.lba.LBAInvHook;
+import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
 import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
 import io.github.cottonmc.component.api.IntegrationHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.InventoryProvider;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryComponentHelper {
+public class InventoryComponentHelper implements ComponentHelper<InventoryComponent> {
+	public static final InventoryComponentHelper INSTANCE = new InventoryComponentHelper();
 
-	private static final List<BlockInventoryHook> BLOCK_HOOKS = new ArrayList<>();
+	private final List<BlockInventoryHook> BLOCK_HOOKS = new ArrayList<>();
 
-	private static final List<ItemInventoryHook> ITEM_HOOKS = new ArrayList<>();
+	private final List<ItemInventoryHook> ITEM_HOOKS = new ArrayList<>();
 
-	/**
-	 * Query whether a block has a compatible inventory component.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @return Whether this block has an inventory we can access.
-	 */
+	//legacy hooks - will be removed on 1.0 release
+	@Deprecated
 	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		return hasInventoryComponent(world, pos, dir, "");
+		return INSTANCE.hasExtendedComponent(world, pos, dir);
 	}
 
-	/**
-	 * Query whether a block has a compatible inventory component, used from inside other hooks.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return Whether this block has an inventory we can access.
-	 */
-	public static boolean hasInventoryComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+	@Deprecated
+	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
+		return INSTANCE.getExtendedComponent(world, pos, dir);
+	}
+
+	@Deprecated
+	public static boolean hasInventoryComponent(ItemStack stack) {
+		return INSTANCE.hasComponent(stack);
+	}
+
+	@Deprecated
+	public static InventoryComponent getInventoryComponent(ItemStack stack) {
+		return INSTANCE.getComponent(stack);
+	}
+
+	@Override
+	public boolean hasComponent(BlockView world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasInvComponent(world, pos, dir)) return true;
 		}
 		//no special hooks, so fall back to vanilla
-		if (!ignore.equals("minecraft")) return HopperBlockEntity.getInventoryAt(world, pos) != null;
+		if (!ignore.equals("minecraft")) {
+			BlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
+			if (block instanceof InventoryProvider && world instanceof IWorld) {
+				return ((InventoryProvider)block).getInventory(state, (IWorld)world, pos) != null;
+			} else if (block.hasBlockEntity()) {
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				if (blockEntity instanceof Inventory) {
+					if (blockEntity instanceof ChestBlockEntity && block instanceof ChestBlock && world instanceof World) {
+						return ChestBlock.getInventory((ChestBlock)block, state, (World)world, pos, true) != null;
+					}
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
-	/**
-	 * Get a compatible inventory component on a block.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
-	 */
+	@Override
 	@Nullable
-	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir) {
-		return getInventoryComponent(world, pos, dir, "");
-	}
-
-	/**
-	 * Get a compatible inventory component on a block, used from inside other hooks.
-	 * @param world The world the block is in.
-	 * @param pos The position the block is at.
-	 * @param dir The direction to access the inventory from, or null.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return The inventory component on this block, or null if it doesn't exist or is incompatible.
-	 */
-	@Nullable
-	public static InventoryComponent getInventoryComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+	public InventoryComponent getComponent(BlockView world, BlockPos pos, @Nullable Direction dir, String ignore) {
 		//check registered block hooks
 		for (BlockInventoryHook hook : BLOCK_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			InventoryComponent component = hook.getInvComponent(world, pos, dir);
+			if (component != null) return component;
+		}
+		//no special hooks, so fall back to vanilla
+		if (!ignore.equals("minecraft")) {
+			BlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
+			if (block instanceof InventoryProvider && world instanceof IWorld) {
+				return new WrappedSidedInvComponent(((InventoryProvider)block).getInventory(state, (IWorld)world, pos), dir);
+			} else if (block.hasBlockEntity()) {
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				if (blockEntity instanceof SidedInventory) {
+					return new WrappedSidedInvComponent((SidedInventory)blockEntity, dir);
+				} else if (blockEntity instanceof Inventory) {
+					if (blockEntity instanceof ChestBlockEntity && block instanceof ChestBlock && world instanceof World) {
+						return new WrappedInvComponent(ChestBlock.getInventory((ChestBlock)block, state, (World)world, pos, true));
+					}
+					return new WrappedInvComponent((Inventory)blockEntity);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean hasExtendedComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+		//check registered block hooks
+		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
+			if (hook.hasExtendedInvComponent(world, pos, dir)) return true;
+		}
+		//no special hooks, so fall back to vanilla
+		if (!ignore.equals("minecraft")) return HopperBlockEntity.getInventoryAt(world, pos) != null;
+		return false;
+	}
+
+	@Override
+	@Nullable
+	public InventoryComponent getExtendedComponent(World world, BlockPos pos, @Nullable Direction dir, String ignore) {
+		//check registered block hooks
+		for (BlockInventoryHook hook : BLOCK_HOOKS) {
+			if (hook.getId().equals(ignore)) continue;
+			InventoryComponent component = hook.getExtendedInvComponent(world, pos, dir);
 			if (component != null) return component;
 		}
 		//no special hooks, so fall back to vanilla
@@ -98,22 +149,8 @@ public class InventoryComponentHelper {
 		return null;
 	}
 
-	/**
-	 * Query whether a stack has a compatible inventory component.
-	 * @param stack The stack to check on.
-	 * @return Whether a this stack has an inventory we can access.
-	 */
-	public static boolean hasInventoryComponent(ItemStack stack) {
-		return hasInventoryComponent(stack, "");
-	}
-
-	/**
-	 * Query whether a stack has a compatible inventory component, used from inside other hooks.
-	 * @param stack The stack to check on.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return Whether a this stack has an inventory we can access.
-	 */
-	public static boolean hasInventoryComponent(ItemStack stack, String ignore) {
+	@Override
+	public boolean hasComponent(ItemStack stack, String ignore) {
 		for (ItemInventoryHook hook : ITEM_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			if (hook.hasInvComponent(stack)) return true;
@@ -121,24 +158,9 @@ public class InventoryComponentHelper {
 		return false;
 	}
 
-	/**
-	 * Get a compatible inventory component on a stack.
-	 * @param stack The stack to check on.
-	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
-	 */
+	@Override
 	@Nullable
-	public static InventoryComponent getInventoryComponent(ItemStack stack) {
-		return getInventoryComponent(stack, "");
-	}
-
-	/**
-	 * Get a compatible inventory component on a stack, used from inside other hooks.
-	 * @param stack The stack to check on.
-	 * @param ignore The ID of the hook calling this, to prevent infinite loops.
-	 * @return The inventory component on this stack, or null if it doesn't exist or is incompatible.
-	 */
-	@Nullable
-	public static InventoryComponent getInventoryComponent(ItemStack stack, String ignore) {
+	public InventoryComponent getComponent(ItemStack stack, String ignore) {
 		for (ItemInventoryHook hook : ITEM_HOOKS) {
 			if (hook.getId().equals(ignore)) continue;
 			InventoryComponent component = hook.getInvComponent(stack);
@@ -151,7 +173,7 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing an inventory stored on a block or an entity at a given position.
 	 * @param hook The hook to add.
 	 */
-	public static void addBlockHook(BlockInventoryHook hook) {
+	public void addBlockHook(BlockInventoryHook hook) {
 		BLOCK_HOOKS.add(hook);
 	}
 
@@ -159,7 +181,7 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing an inventory stored on an item stack.
 	 * @param hook The hook to add.
 	 */
-	public static void addItemHook(ItemInventoryHook hook) {
+	public void addItemHook(ItemInventoryHook hook) {
 		ITEM_HOOKS.add(hook);
 	}
 
@@ -167,7 +189,7 @@ public class InventoryComponentHelper {
 	 * Add a new hook for accessing both inventories stored on blocks or entities and on item stacks.
 	 * @param hook The hook to add.
 	 */
-	public static void addDualHook(DualInventoryHook hook) {
+	public void addDualHook(DualInventoryHook hook) {
 		BLOCK_HOOKS.add(hook);
 		ITEM_HOOKS.add(hook);
 	}
@@ -185,7 +207,7 @@ public class InventoryComponentHelper {
 		 * @param dir The direction to test from, or null.
 		 * @return Whether a compatible inventory exists here.
 		 */
-		boolean hasInvComponent(World world, BlockPos pos, @Nullable Direction dir);
+		boolean hasInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir);
 
 		/**
 		 * Get a compatible inventory in the world.
@@ -195,7 +217,30 @@ public class InventoryComponentHelper {
 		 * @return A wrapped form of a compatible inventory, or null if one doesn't exist.
 		 */
 		@Nullable
-		InventoryComponent getInvComponent(World world, BlockPos pos, @Nullable Direction dir);
+		InventoryComponent getInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir);
+
+		/**
+		 * Test for a compatible inventory in the world. Supports entities.
+		 * @param world The world to test in.
+		 * @param pos The position to test at.
+		 * @param dir The direction to test from, or null.
+		 * @return Whether a compatible inventory exists here.
+		 */
+		default boolean hasExtendedInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+			return hasInvComponent(world, pos, dir);
+		}
+
+		/**
+		 * Get a compatible inventory in the world. Supports entities.
+		 * @param world The world to get in.
+		 * @param pos The position to get at.
+		 * @param dir The direction to get from, or null.
+		 * @return A wrapped form of a compatible inventory, or null if one doesn't exist.
+		 */
+		@Nullable
+		default InventoryComponent getExtendedInvComponent(World world, BlockPos pos, @Nullable Direction dir) {
+			return getInvComponent(world, pos, dir);
+		}
 
 		String getId();
 	}

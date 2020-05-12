@@ -1,6 +1,7 @@
 package io.github.cottonmc.component.item;
 
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.api.Observable;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.serializer.StackSerializer;
@@ -132,7 +133,7 @@ public interface InventoryComponent extends Component, Observable {
 	 * @return Whether this stack may be inserted into this slot.
 	 */
 	default boolean isAcceptableStack(int slot, ItemStack stack) {
-		return !InventoryComponentHelper.hasInventoryComponent(stack);
+		return !ComponentHelper.INVENTORY.hasComponent(stack);
 	}
 
 	/**

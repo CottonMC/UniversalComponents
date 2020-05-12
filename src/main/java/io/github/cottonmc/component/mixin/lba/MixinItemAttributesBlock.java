@@ -6,6 +6,7 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
@@ -37,8 +38,8 @@ public class MixinItemAttributesBlock {
 			SidedInventory sidedInv;
 			FixedItemInv wrapper;
 			//BEGIN INJECTION
-			if (InventoryComponentHelper.hasInventoryComponent(world, pos, blockSide, "lba-items")) {
-				InventoryComponent component = InventoryComponentHelper.getInventoryComponent(world, pos, blockSide, "lba-items");
+			if (ComponentHelper.INVENTORY.hasComponent(world, pos, blockSide, "lba-items")) {
+				InventoryComponent component = ComponentHelper.INVENTORY.getComponent(world, pos, blockSide, "lba-items");
 				list.add(convertor.apply(new AttributeWrapper(component)));
 				//END INJECTION
 			} else if (block instanceof InventoryProvider) {
