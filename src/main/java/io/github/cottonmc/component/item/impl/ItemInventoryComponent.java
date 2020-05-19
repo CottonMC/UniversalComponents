@@ -11,8 +11,15 @@ import net.minecraft.nbt.CompoundTag;
  * Inventory component for adding item storage onto an item stack.
  */
 public class ItemInventoryComponent extends SimpleInventoryComponent implements ItemComponent<InventoryComponent> {
+	private ComponentType<InventoryComponent> type;
+
 	public ItemInventoryComponent(int size) {
+		this(size, UniversalComponents.INVENTORY_COMPONENT);
+	}
+
+	public ItemInventoryComponent(int size, ComponentType<InventoryComponent> type) {
 		super(size);
+		this.type = type;
 	}
 
 	@Override
@@ -22,6 +29,6 @@ public class ItemInventoryComponent extends SimpleInventoryComponent implements 
 
 	@Override
 	public ComponentType<InventoryComponent> getComponentType() {
-		return UniversalComponents.INVENTORY_COMPONENT;
+		return type;
 	}
 }

@@ -13,15 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimpleCapacitorComponent implements CapacitorComponent {
-	protected EnergyType energyType = EnergyTypes.ULTRA_LOW_VOLTAGE;
+	protected EnergyType energyType;
 	protected int maxEnergy;
 	protected int currentEnergy = 0;
-	protected int harm;
+	protected int harm = 0;
 	protected final List<Runnable> listeners = new ArrayList<>();
-
-	public SimpleCapacitorComponent(int maxEnergy) {
-		this.maxEnergy = maxEnergy;
-	}
 
 	public SimpleCapacitorComponent(int maxEnergy, EnergyType type) {
 		this.maxEnergy = maxEnergy;

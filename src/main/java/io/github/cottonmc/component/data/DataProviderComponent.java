@@ -39,6 +39,6 @@ public interface DataProviderComponent extends Component {
 
 	@Override
 	default CompoundTag toTag(CompoundTag tag) {
-		return null;
+		return tag;
 	}
 }

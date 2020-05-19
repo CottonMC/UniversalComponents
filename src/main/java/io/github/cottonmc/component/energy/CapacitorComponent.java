@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-//TODO: better name?
+//TODO: better name? Spin out into a separate project?
 public interface CapacitorComponent extends Component, Observable {
 	/**
 	 * @return The maximum amount of energy the storage can hold.
