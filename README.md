@@ -2,7 +2,7 @@
 
 # Universal Components
 
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=http%3A%2F%2Fserver.bbkr.space%3A8081%2Fartifactory%2Flibs-release%2Fio%2Fgithub%2Fcottonmc%2FUniversalComponents%2Fmaven-metadata.xml)](http://server.bbkr.space:8081/artifactory/libs-release/io/github/cottonmc/UniversalComponents/)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fserver.bbkr.space%2Fartifactory%2Flibs-release%2Fio%2Fgithub%2Fcottonmc%2FUniversalComponents%2Fmaven-metadata.xml)](https://server.bbkr.space/artifactory/libs-release/io/github/cottonmc/UniversalComponents/)
 
 [>> Downloads <<](https://github.com/CottonMC/UniversalComponents/releases)
 
@@ -18,7 +18,7 @@ Universal Components is available on the Cotton maven. To import, add these to y
 
 ```groovy
 repositories {
-    url { "https://server.bbkr.space:8081/artifactory/libs-release" }
+    url { "https://server.bbkr.space/artifactory/libs-release" }
 }
 
 dependencies {
