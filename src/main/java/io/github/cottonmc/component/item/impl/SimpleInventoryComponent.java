@@ -4,8 +4,7 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
 import nerdhub.cardinal.components.api.component.extension.SyncedComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
-
+import net.minecraft.util.collection.DefaultedList;
 import java.util.ArrayList;
 import java.util.List;
 

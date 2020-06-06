@@ -1,15 +1,13 @@
 package io.github.fablabsmc.fablabs.api.fluidvolume.v1;
 
-import com.mojang.datafixers.Dynamic;
-
+import io.github.cottonmc.component.UniversalComponents;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.datafixer.NbtOps;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-
-import net.fabricmc.fabric.api.util.NbtType;
 
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
@@ -35,7 +33,7 @@ public final class FluidVolume {
 
 	private FluidVolume(CompoundTag tag) {
 		fluid = Registry.FLUID.get(new Identifier(tag.getString("Id")));
-		amount = Fraction.deserialize(new Dynamic<>(NbtOps.INSTANCE, tag.getCompound("Amount")));
+		amount = Fraction.CODEC.parse(NbtOps.INSTANCE, tag.getCompound("Amount")).resultOrPartial(UniversalComponents.logger::error).orElse(Fraction.ZERO);
 
 		if (tag.contains("Tag", NbtType.COMPOUND)) {
 			this.tag = tag.getCompound("Tag");
@@ -131,7 +129,7 @@ public final class FluidVolume {
 	public CompoundTag toTag(CompoundTag tag) {
 		tag.putString("Id", Registry.FLUID.getId(getFluid()).toString());
 
-		tag.put("Amount", amount.serialize(NbtOps.INSTANCE));
+		tag.put("Amount", Fraction.CODEC.encodeStart(NbtOps.INSTANCE, amount).resultOrPartial(UniversalComponents.logger::error).orElseGet(CompoundTag::new));
 
 		if (this.tag != null) {
 			tag.put("Tag", this.tag.copy());

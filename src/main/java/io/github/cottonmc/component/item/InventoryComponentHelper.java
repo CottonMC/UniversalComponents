@@ -24,9 +24,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldAccess;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,8 @@ public class InventoryComponentHelper implements ComponentHelper<InventoryCompon
 		if (!ignore.equals("minecraft")) {
 			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
-			if (block instanceof InventoryProvider && world instanceof IWorld) {
-				return ((InventoryProvider)block).getInventory(state, (IWorld)world, pos) != null;
+			if (block instanceof InventoryProvider && world instanceof WorldAccess) {
+				return ((InventoryProvider)block).getInventory(state, (WorldAccess)world, pos) != null;
 			} else if (block.hasBlockEntity()) {
 				BlockEntity blockEntity = world.getBlockEntity(pos);
 				if (blockEntity instanceof Inventory) {
@@ -98,8 +97,8 @@ public class InventoryComponentHelper implements ComponentHelper<InventoryCompon
 		if (!ignore.equals("minecraft")) {
 			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
-			if (block instanceof InventoryProvider && world instanceof IWorld) {
-				return new WrappedSidedInvComponent(((InventoryProvider)block).getInventory(state, (IWorld)world, pos), dir);
+			if (block instanceof InventoryProvider && world instanceof WorldAccess) {
+				return new WrappedSidedInvComponent(((InventoryProvider)block).getInventory(state, (WorldAccess)world, pos), dir);
 			} else if (block.hasBlockEntity()) {
 				BlockEntity blockEntity = world.getBlockEntity(pos);
 				if (blockEntity instanceof SidedInventory) {

@@ -14,8 +14,8 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Block.class)
@@ -23,7 +23,7 @@ public abstract class MixinBlock implements InventoryProvider {
 
 	//TODO: should this logic just go in MixinHopperBlockEntity instead? Does this even actually work?
 	@Override
-	public SidedInventory getInventory(BlockState state, IWorld world, BlockPos pos) {
+	public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
 		if (ComponentHelper.INVENTORY.hasComponent(world, pos, null, "minecraft")) {
 			InventoryComponent comp = ComponentHelper.INVENTORY.getComponent(world, pos, null, "minecraft");
 			if (comp.asLocalInventory(world, pos) != null) return comp.asLocalInventory(world, pos);

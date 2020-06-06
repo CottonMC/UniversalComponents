@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "fabric-loom" version "0.2.6-SNAPSHOT"
+	id "fabric-loom" version "0.2.7-SNAPSHOT"
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -45,24 +45,23 @@ dependencies {
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
 	//cardinal components
-	modImplementation "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}" //only non-fabricmc lib we actually require at runtime
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
-	modCompileOnly "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
-	include "com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
+	include modImplementation("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") //only non-fabricmc lib we actually require at runtime
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
+	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
 
 	//lib block attributes
 	modCompileOnly "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
 
 	//fluidity
-	modCompileOnly ("grondag:fluidity-mc115:${project.fluidity_version}.+") { transitive = false }
+	modCompileOnly ("grondag:fluidity-mc116:${project.fluidity_version}.+") { transitive = false }
 
 	//item inventory
 	modCompileOnly "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
-	
+
 	//techreborn energy
 	modCompileOnly "teamreborn:energy:${tr_energy_version}"
 }

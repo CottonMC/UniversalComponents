@@ -1,23 +1,24 @@
 package io.github.fablabsmc.fablabs.api.fluidvolume.v1;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.math.IntMath.gcd;
+import com.google.common.annotations.VisibleForTesting;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
-
-import net.minecraft.util.DynamicSerializable;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.math.IntMath.gcd;
 
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
  */
-public final class Fraction extends Number implements Comparable<Fraction>, DynamicSerializable {
+public final class Fraction extends Number implements Comparable<Fraction> {
 	public static final Fraction ZERO = new Fraction(0, 1);
 	public static final Fraction ONE = new Fraction(1, 1);
+	public static final Codec<Fraction> CODEC = new Serializer();
 
 	private final int numerator;
 	private final /*Positive*/ int denominator;
@@ -245,22 +246,30 @@ public final class Fraction extends Number implements Comparable<Fraction>, Dyna
 		return numerator + "/" + denominator;
 	}
 
-	public static <T> Fraction deserialize(Dynamic<T> dynamic) {
-		int[] arr = dynamic.asIntStream().toArray();
+	private static final class Serializer implements Codec<Fraction> {
 
-		if (arr.length == 0) {
-			return ZERO;
+		private Serializer() {
+
 		}
 
-		if (arr.length == 1) {
-			return ofWhole(arr[0]);
+		@Override
+		public <T> DataResult<Pair<Fraction, T>> decode(DynamicOps<T> ops, T input) {
+			return ops.getIntStream(input).map(stream -> {
+				int[] arr = stream.toArray();
+				switch (arr.length) {
+					case 0:
+						return ZERO;
+					case 1:
+						return ofWhole(arr[0]);
+					default:
+						return of(arr[0], arr[1]);
+				}
+			}).map(it -> Pair.of(it, ops.empty()));
 		}
 
-		return of(arr[0], arr[1]);
-	}
-
-	@Override
-	public <T> T serialize(DynamicOps<T> ops) {
-		return ops.createIntList(IntStream.of(numerator, denominator));
+		@Override
+		public <T> DataResult<T> encode(Fraction input, DynamicOps<T> ops, T prefix) {
+			return DataResult.success(ops.createIntList(IntStream.of(input.numerator, input.denominator)));
+		}
 	}
 }

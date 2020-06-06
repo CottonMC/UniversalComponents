@@ -13,10 +13,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-
+import net.minecraft.world.WorldAccess;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -196,7 +195,7 @@ public interface InventoryComponent extends Component, Observable {
 	 * @return A sided inventory wrapper of this component, or null if it's not attached to a block or has no sided behavior.
 	 */
 	@Nullable
-	default SidedInventory asLocalInventory(IWorld world, BlockPos pos) {
+	default SidedInventory asLocalInventory(WorldAccess world, BlockPos pos) {
 		return null;
 	}
 
