@@ -98,7 +98,10 @@ public class InventoryComponentHelper implements ComponentHelper<InventoryCompon
 			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
 			if (block instanceof InventoryProvider && world instanceof WorldAccess) {
-				return new WrappedSidedInvComponent(((InventoryProvider)block).getInventory(state, (WorldAccess)world, pos), dir);
+				SidedInventory inv = ((InventoryProvider)block).getInventory(state, (WorldAccess)world, pos);
+				if (inv != null) {
+					return new WrappedSidedInvComponent(inv, dir);
+				}
 			} else if (block.hasBlockEntity()) {
 				BlockEntity blockEntity = world.getBlockEntity(pos);
 				if (blockEntity instanceof SidedInventory) {
