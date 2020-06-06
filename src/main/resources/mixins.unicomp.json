@@ -4,6 +4,7 @@
   "plugin": "io.github.cottonmc.component.plugin.UniversalComponentsMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "vanilla.RegistryAccessor",
     "vanilla.MixinBlock",
     "vanilla.MixinHopperBlockEntity",
     "lba.MixinItemAttributesBlock",

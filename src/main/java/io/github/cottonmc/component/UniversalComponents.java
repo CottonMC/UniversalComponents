@@ -1,7 +1,7 @@
 package io.github.cottonmc.component;
 
+import com.mojang.serialization.Lifecycle;
 import io.github.cottonmc.component.api.IntegrationHandler;
-import io.github.cottonmc.component.compat.tr.RebornEnergyType;
 import io.github.cottonmc.component.compat.tr.RebornEnergyTypes;
 import io.github.cottonmc.component.data.DataProviderComponent;
 import io.github.cottonmc.component.energy.CapacitorComponent;
@@ -9,13 +9,14 @@ import io.github.cottonmc.component.energy.type.EnergyType;
 import io.github.cottonmc.component.energy.type.EnergyTypes;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
+import io.github.cottonmc.component.mixin.vanilla.RegistryAccessor;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +42,8 @@ public class UniversalComponents implements ModInitializer {
 	 */
 	public static final ComponentType<DataProviderComponent> DATA_PROVIDER_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "data_provider"), DataProviderComponent.class);
 
-	public static final Registry<EnergyType> ENERGY_TYPES = new DefaultedRegistry<>("universalcomponents:ultra_low_voltage");
+	public static final RegistryKey<Registry<EnergyType>> ENERGY_TYPES_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(MODID, "energy_types"));
+	public static final Registry<EnergyType> ENERGY_TYPES = RegistryAccessor.create(ENERGY_TYPES_REGISTRY_KEY, new DefaultedRegistry<>(new Identifier(MODID, "ultra_low_voltage").toString(), ENERGY_TYPES_REGISTRY_KEY, Lifecycle.stable()), () -> EnergyTypes.ULTRA_LOW_VOLTAGE);
 
 	@Override
 	public void onInitialize() {
