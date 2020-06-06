@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "fabric-loom" version "0.2.6-SNAPSHOT"
+	id "fabric-loom" version "0.2.7-SNAPSHOT"
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -62,7 +62,7 @@ dependencies {
 
 	//item inventory
 	modCompileOnly "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
-	
+
 	//techreborn energy
 	modCompileOnly "teamreborn:energy:${tr_energy_version}"
 }
