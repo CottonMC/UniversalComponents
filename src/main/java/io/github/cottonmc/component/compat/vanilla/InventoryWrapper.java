@@ -8,8 +8,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
-
 import java.util.Set;
 
 /**
@@ -36,7 +34,7 @@ public interface InventoryWrapper extends Inventory {
 	 * @return The inventory size.
 	 */
 	@Override
-	default int getInvSize() {
+	default int size() {
 		return getComponent().getMutableStacks().size();
 	}
 
@@ -44,9 +42,9 @@ public interface InventoryWrapper extends Inventory {
 	 * @return true if this inventory has only empty stacks, false otherwise.
 	 */
 	@Override
-	default boolean isInvEmpty() {
-		for (int i = 0; i < getInvSize(); i++) {
-			ItemStack stack = getInvStack(i);
+	default boolean isEmpty() {
+		for (int i = 0; i < size(); i++) {
+			ItemStack stack = getStack(i);
 			if (!stack.isEmpty()) {
 				return false;
 			}
@@ -58,7 +56,7 @@ public interface InventoryWrapper extends Inventory {
 	 * Gets the item in the slot.
 	 */
 	@Override
-	default ItemStack getInvStack(int slot) {
+	default ItemStack getStack(int slot) {
 		return getComponent().getMutableStacks().get(slot);
 	}
 
@@ -68,7 +66,7 @@ public interface InventoryWrapper extends Inventory {
 	 * takes all items in that slot.
 	 */
 	@Override
-	default ItemStack takeInvStack(int slot, int count) {
+	default ItemStack removeStack(int slot, int count) {
 		ItemStack result = Inventories.splitStack(getComponent().getMutableStacks(), slot, count);
 		if (!result.isEmpty()) {
 			markDirty();
@@ -80,7 +78,7 @@ public interface InventoryWrapper extends Inventory {
 	 * Removes the current stack in the {@code slot} and returns it.
 	 */
 	@Override
-	default ItemStack removeInvStack(int slot) {
+	default ItemStack removeStack(int slot) {
 		return Inventories.removeStack(getComponent().getMutableStacks(), slot);
 	}
 
@@ -90,10 +88,10 @@ public interface InventoryWrapper extends Inventory {
 	 * it gets resized to this inventory's maximum amount.
 	 */
 	@Override
-	default void setInvStack(int slot, ItemStack stack) {
+	default void setStack(int slot, ItemStack stack) {
 		getComponent().getMutableStacks().set(slot, stack);
-		if (stack.getCount() > getInvMaxStackAmount()) {
-			stack.setCount(getInvMaxStackAmount());
+		if (stack.getCount() > getMaxCountPerStack()) {
+			stack.setCount(getMaxCountPerStack());
 		}
 	}
 
@@ -111,7 +109,7 @@ public interface InventoryWrapper extends Inventory {
 	}
 
 	@Override
-	default boolean canPlayerUseInv(PlayerEntity player) {
+	default boolean canPlayerUse(PlayerEntity player) {
 		return true;
 	}
 }

@@ -32,21 +32,21 @@ public interface SidedInventoryWrapper extends SidedInventory, InventoryWrapper 
 	}
 
 	@Override
-	default int[] getInvAvailableSlots(Direction side) {
+	default int[] getAvailableSlots(Direction side) {
 		InventoryComponent component = getComponent(side);
 		if (component == null) return new int[0];
 		return IntStream.range(0, component.getSize()).filter(slot -> component.canInsert(slot) || component.canExtract(slot)).toArray();
 	}
 
 	@Override
-	default boolean canInsertInvStack(int slot, ItemStack stack, @Nullable Direction dir) {
+	default boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
 		InventoryComponent component = getComponent(dir);
 		if (component == null) return false;
 		return component.canInsert(slot) && component.isAcceptableStack(slot, stack);
 	}
 
 	@Override
-	default boolean canExtractInvStack(int slot, ItemStack stack, Direction dir) {
+	default boolean canExtract(int slot, ItemStack stack, Direction dir) {
 		InventoryComponent component = getComponent(dir);
 		if (component == null) return false;
 		return component.canExtract(slot) && component.isAcceptableStack(slot, stack);

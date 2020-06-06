@@ -17,48 +17,48 @@ public class InvBEWrapper implements SidedInventory {
 	}
 
 	@Override
-	public int[] getInvAvailableSlots(Direction side) {
-		return IntStream.range(0, inv.getInvSize()).toArray();
+	public int[] getAvailableSlots(Direction side) {
+		return IntStream.range(0, inv.size()).toArray();
 	}
 
 	@Override
-	public boolean canInsertInvStack(int slot, ItemStack stack, @Nullable Direction dir) {
+	public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
 		return true;
 	}
 
 	@Override
-	public boolean canExtractInvStack(int slot, ItemStack stack, Direction dir) {
+	public boolean canExtract(int slot, ItemStack stack, Direction dir) {
 		return true;
 	}
 
 	@Override
-	public int getInvSize() {
-		return inv.getInvSize();
+	public int size() {
+		return inv.size();
 	}
 
 	@Override
-	public boolean isInvEmpty() {
-		return inv.isInvEmpty();
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 
 	@Override
-	public ItemStack getInvStack(int slot) {
-		return inv.getInvStack(slot);
+	public ItemStack getStack(int slot) {
+		return inv.getStack(slot);
 	}
 
 	@Override
-	public ItemStack takeInvStack(int slot, int amount) {
-		return inv.takeInvStack(slot, amount);
+	public ItemStack removeStack(int slot, int amount) {
+		return inv.removeStack(slot, amount);
 	}
 
 	@Override
-	public ItemStack removeInvStack(int slot) {
-		return inv.removeInvStack(slot);
+	public ItemStack removeStack(int slot) {
+		return inv.removeStack(slot);
 	}
 
 	@Override
-	public void setInvStack(int slot, ItemStack stack) {
-		inv.setInvStack(slot, stack);
+	public void setStack(int slot, ItemStack stack) {
+		inv.setStack(slot, stack);
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class InvBEWrapper implements SidedInventory {
 	}
 
 	@Override
-	public boolean canPlayerUseInv(PlayerEntity player) {
-		return inv.canPlayerUseInv(player);
+	public boolean canPlayerUse(PlayerEntity player) {
+		return inv.canPlayerUse(player);
 	}
 
 	@Override

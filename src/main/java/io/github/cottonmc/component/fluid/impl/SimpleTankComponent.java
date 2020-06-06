@@ -4,10 +4,9 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.util.DefaultedList;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.util.collection.DefaultedList;
 
 public class SimpleTankComponent implements TankComponent {
 	protected DefaultedList<FluidVolume> contents;

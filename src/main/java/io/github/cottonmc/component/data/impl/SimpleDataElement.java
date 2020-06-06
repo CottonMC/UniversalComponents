@@ -231,7 +231,7 @@ public class SimpleDataElement implements DataElement {
 		for (int i = 0; i < a.size(); i++) {
 			ItemStack isa = a.get(i);
 			ItemStack isb = b.get(i);
-			if (!ItemStack.areEqualIgnoreDamage(isa, isb)) {
+			if (!ItemStack.areEqual(isa, isb)) {
 				return false;
 			}
 		}

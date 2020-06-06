@@ -46,7 +46,7 @@ public class MixinItemAttributesBlock {
 				InventoryProvider provider = (InventoryProvider)block;
 				sidedInv = provider.getInventory(state, world, pos);
 				if (sidedInv != null) {
-					if (sidedInv.getInvSize() > 0) {
+					if (sidedInv.size() > 0) {
 						if (direction != null) {
 							wrapper = FixedSidedInventoryVanillaWrapper.create(sidedInv, blockSide);
 						} else {

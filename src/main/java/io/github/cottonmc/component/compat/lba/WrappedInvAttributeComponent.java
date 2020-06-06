@@ -13,8 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
-
+import net.minecraft.util.collection.DefaultedList;
 import java.util.*;
 
 public class WrappedInvAttributeComponent implements InventoryComponent {
@@ -146,7 +145,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	public Inventory asInventory() {
 		return new InventoryFixedWrapper(inv) {
 			@Override
-			public boolean canPlayerUseInv(PlayerEntity player) {
+			public boolean canPlayerUse(PlayerEntity player) {
 				return true;
 			}
 		};
@@ -159,7 +158,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	private ItemFilter createFilterForSlot(int slot) {
 		ItemStack stack = getStack(slot);
-		return target -> ItemStack.areEqualIgnoreDamage(target, stack);
+		return target -> ItemStack.areEqual(target, stack);
 	}
 
 	private Simulation simForAction(ActionType type) {
