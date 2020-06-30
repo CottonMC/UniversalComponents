@@ -3,7 +3,6 @@ package io.github.cottonmc.component.energy.impl;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import io.github.cottonmc.component.energy.type.EnergyTypes;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 

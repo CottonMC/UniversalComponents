@@ -4,7 +4,6 @@ import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.vanilla.InvBEWrapper;
 import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;

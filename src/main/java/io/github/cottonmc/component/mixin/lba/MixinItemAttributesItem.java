@@ -8,7 +8,6 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
-import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

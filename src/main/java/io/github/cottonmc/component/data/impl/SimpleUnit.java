@@ -7,7 +7,7 @@ import java.text.NumberFormat;
 public class SimpleUnit implements Unit {
 	public static final NumberFormat FORMAT_STANDARD = NumberFormat.getNumberInstance();
 	static {
-		FORMAT_STANDARD.setMinimumFractionDigits(0);
+		FORMAT_STANDARD.setMinimumFractionDigits(2);
 		FORMAT_STANDARD.setMaximumFractionDigits(2);
 	}
 

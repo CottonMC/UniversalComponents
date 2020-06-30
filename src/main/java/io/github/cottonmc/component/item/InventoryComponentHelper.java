@@ -7,7 +7,6 @@ import io.github.cottonmc.component.compat.core.ItemComponentHook;
 import io.github.cottonmc.component.compat.fluidity.FluidityHook;
 import io.github.cottonmc.component.compat.iteminv.ItemInvHook;
 import io.github.cottonmc.component.compat.lba.LBAInvHook;
-import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.compat.vanilla.WrappedInvComponent;
 import io.github.cottonmc.component.compat.vanilla.WrappedSidedInvComponent;
 import io.github.cottonmc.component.api.IntegrationHandler;

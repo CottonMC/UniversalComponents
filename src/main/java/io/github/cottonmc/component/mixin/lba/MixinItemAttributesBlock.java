@@ -9,7 +9,6 @@ import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper;
 import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.lba.AttributeWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.InventoryComponentHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.InventoryProvider;
