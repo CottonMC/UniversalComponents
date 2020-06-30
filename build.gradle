@@ -57,7 +57,7 @@ dependencies {
 	modCompileOnly "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
 
 	//fluidity
-	modCompileOnly ("grondag:fluidity-mc116:${project.fluidity_version}")// { transitive = false }
+	modCompileOnly ("grondag:fluidity-mc116:${project.fluidity_version}")
 
 	//item inventory
 	modCompileOnly "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
