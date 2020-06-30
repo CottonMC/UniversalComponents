@@ -43,7 +43,7 @@ public abstract class ElectricalEnergyType implements EnergyType {
 	public boolean isHarmful(EnergyType type) {
 		if (type instanceof ElectricalEnergyType) {
 			ElectricalEnergyType electric = (ElectricalEnergyType)type;
-			return electric.getScaledTransferSize() <= getMaximumTransferSize();
+			return electric.getScaledTransferSize() > getMaximumTransferSize();
 		}
 
 		return true; //Other energy type isn't electrical; we can't deal with it.
