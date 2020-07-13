@@ -14,6 +14,9 @@ import javax.annotation.Nullable;
 public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 	private InventoryComponent component;
 
+	// TODO: (LBA 0.7.1) Remove this field as the default impl handles no-op listeners
+	private int changes;
+
 	public AttributeWrapper(InventoryComponent component) {
 		this.component = component;
 	}
@@ -44,25 +47,63 @@ public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 	}
 
 	@Override
+	public int getMaxAmount(int slot, ItemStack stack) {
+		return component.getMaxStackSize(slot);
+	}
+
+	@Override
 	public boolean setInvStack(int slot, ItemStack to, Simulation simulation) {
+		// InventoryComponent doesn't return whether it was successful or not
+		// so this just checks *everything*
+		ItemStack current = getInvStack(slot);
+		if (ItemStackUtil.areEqualIgnoreAmounts(to, current)) {
+
+			if (to.getCount() > current.getCount()) {
+				if (!component.canInsert(slot)) {
+					return false;
+				}
+			} else if (to.getCount() < current.getCount()) {
+				if (!component.canExtract(slot)) {
+					return false;
+				}
+			} else {
+				return true;
+			}
+
+		} else {
+			if (!current.isEmpty() && !component.canExtract(slot)) {
+				return false;
+			}
+			if (!to.isEmpty() && !component.canInsert(slot)) {
+				return false;
+			}
+		}
+
+		if (!component.isAcceptableStack(slot, to)) {
+			return false;
+		}
 		if (simulation.isAction()) component.setStack(slot, to);
 		return true;
 	}
 
 	@Override
 	public int getChangeValue() {
-		return 0; //TODO: impl?
+		// TODO: (LBA 0.7.1) Remove this method as the default impl handles no-op listeners
+		return changes++;
 	}
 
 	@Nullable
 	@Override
 	public ListenerToken addListener(InvMarkDirtyListener listener, ListenerRemovalToken removalToken) {
-		return null; //TODO: impl?
+		// Not possible: InventoryComponent has no way to call the removal token
+		// TODO: (LBA 0.7.1) Remove this method as the default impl handles no-op listeners
+		return null;
 	}
 
 	@Override
 	public ItemStack attemptExtraction(ItemFilter filter, int maxAmount, Simulation simulation) {
-		return component.takeStack(0, maxAmount, actionForSim(simulation)); //TODO: fix
+		// This is the simplest way to implement this.
+		return getGroupedInv().attemptExtraction(filter, maxAmount, simulation);
 	}
 
 	@Override
