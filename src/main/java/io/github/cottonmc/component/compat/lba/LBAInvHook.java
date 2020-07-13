@@ -41,10 +41,12 @@ public class LBAInvHook implements InventoryComponentHelper.DualInventoryHook {
 		return null;
 	}
 
+	@Override
 	public boolean hasInvComponent(ItemStack stack) {
 		return ItemAttributes.FIXED_INV.get(stack) != EmptyFixedItemInv.INSTANCE;
 	}
 
+	@Override
 	@Nullable
 	public InventoryComponent getInvComponent(ItemStack stack) {
 		FixedItemInv inv = ItemAttributes.FIXED_INV.get(stack);

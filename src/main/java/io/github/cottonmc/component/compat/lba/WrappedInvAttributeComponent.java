@@ -2,10 +2,14 @@ package io.github.cottonmc.component.compat.lba;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.FixedItemInv.CopyingFixedItemInv;
 import alexiil.mc.lib.attributes.item.FixedItemInvView;
 import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.lib.attributes.item.ItemInvUtil;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
@@ -25,7 +29,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	//TODO: other wrappers for extractable-only, insertable-only, etc?
 	public WrappedInvAttributeComponent(FixedItemInv inv) {
 		this.inv = inv;
-		this.view = inv.getFixedView();
+		this.view = inv;
 		this.extractable = inv.getExtractable();
 		this.insertable = inv.getInsertable();
 	}
@@ -58,6 +62,9 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	@Override
 	public ItemStack getStack(int slot) {
+		if (view instanceof CopyingFixedItemInv) {
+			return view.getInvStack(slot);
+		}
 		return view.getInvStack(slot).copy();
 	}
 
@@ -73,12 +80,12 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	@Override
 	public ItemStack takeStack(int slot, int amount, ActionType action) {
-		return extractable.attemptExtraction(createFilterForSlot(slot), amount, simForAction(action));
+		return inv.getSlot(slot).attemptAnyExtraction(amount, simForAction(action));
 	}
 
 	@Override
 	public ItemStack removeStack(int slot, ActionType action) {
-		return extractable.attemptExtraction(createFilterForSlot(slot), getStack(slot).getCount(), simForAction(action));
+		return takeStack(slot, Integer.MAX_VALUE, action);
 	}
 
 	@Override
@@ -86,10 +93,9 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 		inv.setInvStack(slot, stack, Simulation.ACTION);
 	}
 
-	//TODO: any way to force slot?
 	@Override
 	public ItemStack insertStack(int slot, ItemStack stack, ActionType action) {
-		return insertable.attemptInsertion(stack, simForAction(action));
+		return ItemInvUtil.insertSingle(inv, slot, stack, simForAction(action));
 	}
 
 	@Override
@@ -114,23 +120,22 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	@Override
 	public int amountOf(Item item) {
-		return amountOf(Collections.singleton(item));
+		return view.getGroupedInv().getAmount(new ExactItemFilter(item));
 	}
 
 	@Override
 	public int amountOf(Set<Item> items) {
-		int ret = 0;
-		for (ItemStack stack : view.stackIterable()) {
-			if (items.contains(stack.getItem())) {
-				ret += stack.getCount();
-			}
-		}
-		return ret;
+		return view.getGroupedInv().getAmount(ExactItemFilter.anyOf(items));
 	}
 
 	@Override
 	public boolean contains(Item item) {
-		return contains(Collections.singleton(item));
+		for (ItemStack stack : view.stackIterable()) {
+			if (stack.getItem() == item) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
