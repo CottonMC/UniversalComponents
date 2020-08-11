@@ -43,7 +43,7 @@ public class UniversalComponents implements ModInitializer {
 	public static final ComponentType<DataProviderComponent> DATA_PROVIDER_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "data_provider"), DataProviderComponent.class);
 
 	public static final RegistryKey<Registry<EnergyType>> ENERGY_TYPES_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(MODID, "energy_types"));
-	public static final Registry<EnergyType> ENERGY_TYPES = RegistryAccessor.create(ENERGY_TYPES_REGISTRY_KEY, new DefaultedRegistry<>(new Identifier(MODID, "ultra_low_voltage").toString(), ENERGY_TYPES_REGISTRY_KEY, Lifecycle.stable()), () -> EnergyTypes.ULTRA_LOW_VOLTAGE);
+	public static final Registry<EnergyType> ENERGY_TYPES = RegistryAccessor.create(ENERGY_TYPES_REGISTRY_KEY, new DefaultedRegistry<>(new Identifier(MODID, "ultra_low_voltage").toString(), ENERGY_TYPES_REGISTRY_KEY, Lifecycle.stable()), () -> EnergyTypes.ULTRA_LOW_VOLTAGE, Lifecycle.stable());
 
 	@Override
 	public void onInitialize() {
