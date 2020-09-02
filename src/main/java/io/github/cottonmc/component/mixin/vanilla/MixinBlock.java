@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 
+//TODO: trash this garbage, find a way to do this without being shit
 @Mixin(Block.class)
 public abstract class MixinBlock implements InventoryProvider {
 

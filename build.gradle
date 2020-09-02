@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "fabric-loom" version "0.2.7-SNAPSHOT"
+	id "fabric-loom" version "0.4-SNAPSHOT"
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -57,7 +57,7 @@ dependencies {
 	modCompileOnly "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
 
 	//fluidity
-	modCompileOnly ("grondag:fluidity-mc116:${project.fluidity_version}")
+	modCompileOnly("grondag:fluidity-mc116:${project.fluidity_version}.+") { transitive = false }
 
 	//item inventory
 	modCompileOnly "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"

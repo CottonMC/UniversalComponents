@@ -3,6 +3,7 @@ package io.github.cottonmc.component.compat.vanilla;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
@@ -74,5 +75,25 @@ public class InvBEWrapper implements SidedInventory {
 	@Override
 	public void clear() {
 		inv.clear();
+	}
+
+	@Override
+	public boolean isValid(int slot, ItemStack stack) {
+		return inv.isValid(slot, stack);
+	}
+
+	@Override
+	public void onOpen(PlayerEntity player) {
+		inv.onOpen(player);
+	}
+
+	@Override
+	public void onClose(PlayerEntity player) {
+		inv.onClose(player);
+	}
+
+	@Override
+	public int getMaxCountPerStack() {
+		return inv.getMaxCountPerStack();
 	}
 }
