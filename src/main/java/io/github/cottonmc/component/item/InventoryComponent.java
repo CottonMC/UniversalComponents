@@ -26,7 +26,7 @@ public interface InventoryComponent extends Component, Observable {
 	/**
 	 * @return How many slots are in this inventory.
 	 */
-	int getSize();
+	int size();
 
 	/**
 	 * @return Whether this inventory is empty or not.
@@ -75,7 +75,7 @@ public interface InventoryComponent extends Component, Observable {
 	 * @param action The type of action to perform.
 	 * @return The stack that was successfully removed.
 	 */
-	ItemStack takeStack(int slot, int amount, ActionType action);
+	ItemStack removeStack(int slot, int amount, ActionType action);
 
 	/**
 	 * Remove an entire item stack.
@@ -113,7 +113,7 @@ public interface InventoryComponent extends Component, Observable {
 	 * Empty this inventory, removing all stacks.
 	 */
 	default void clear() {
-		for (int i = 0; i < getSize(); i++) {
+		for (int i = 0; i < size(); i++) {
 			removeStack(i, ActionType.PERFORM);
 		}
 	}

@@ -19,7 +19,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return stacks.size();
 	}
 
@@ -53,7 +53,7 @@ public class SimpleInventoryComponent implements InventoryComponent {
 	}
 
 	@Override
-	public ItemStack takeStack(int slot, int amount, ActionType action) {
+	public ItemStack removeStack(int slot, int amount, ActionType action) {
 		ItemStack stack = stacks.get(slot);
 		if (!action.shouldPerform()) {
 			stack = stack.copy();

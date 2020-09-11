@@ -35,7 +35,7 @@ public interface SidedInventoryWrapper extends SidedInventory, InventoryWrapper 
 	default int[] getAvailableSlots(Direction side) {
 		InventoryComponent component = getComponent(side);
 		if (component == null) return new int[0];
-		return IntStream.range(0, component.getSize()).filter(slot -> component.canInsert(slot) || component.canExtract(slot)).toArray();
+		return IntStream.range(0, component.size()).filter(slot -> component.canInsert(slot) || component.canExtract(slot)).toArray();
 	}
 
 	@Override
