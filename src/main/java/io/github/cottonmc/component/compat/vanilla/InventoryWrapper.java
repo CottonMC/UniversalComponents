@@ -1,14 +1,10 @@
 package io.github.cottonmc.component.compat.vanilla;
 
-import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
-import nerdhub.cardinal.components.api.component.extension.SyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import java.util.Set;
 
 /**
  * Vanilla {@link Inventory} wrapper for inventory components, so inventory components can have compat with vanilla inventories.

@@ -25,7 +25,7 @@ repositories {
 	mavenCentral()
 	maven { url "http://maven.fabricmc.net/" } // Fabric maven - home of Fabric API and ModMenu
 	maven { url "https://server.bbkr.space/artifactory/libs-release" } // Cotton maven - home of Cotton projects
-	maven { url "https://maven.onyxstudios.dev" } // Onyx Studios maven - home of Cardinal Components
+	maven { url "https://dl.bintray.com/ladysnake/libs" } // Onyx Studios maven - home of Cardinal Components
 	maven { url "https://mod-buildcraft.com/maven" } // Buildcraft maven - home of Lib Block Attributes
 	maven {
 		url = "https://grondag-repo.appspot.com" //Grondag's maven - home of Fluidity
@@ -45,13 +45,13 @@ dependencies {
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
 	//cardinal components
-	include modImplementation("io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") //only non-fabricmc lib we actually require at runtime
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
-	modCompileOnly "io.github.OnyxStudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
+	include modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") //only non-fabricmc lib we actually require at runtime
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}"
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
 
 	//lib block attributes
 	modCompileOnly "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"

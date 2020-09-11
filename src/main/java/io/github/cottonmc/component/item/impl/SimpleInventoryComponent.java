@@ -2,7 +2,6 @@ package io.github.cottonmc.component.item.impl;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.item.InventoryComponent;
-import nerdhub.cardinal.components.api.component.extension.SyncedComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import java.util.ArrayList;
