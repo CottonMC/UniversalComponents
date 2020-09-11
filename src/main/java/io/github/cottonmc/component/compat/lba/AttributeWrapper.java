@@ -30,7 +30,7 @@ public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 
 	@Override
 	public int getSlotCount() {
-		return component.getSize();
+		return component.size();
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class AttributeWrapper implements FixedItemInv, ItemTransferable {
 
 	@Override
 	public ItemStack attemptExtraction(ItemFilter filter, int maxAmount, Simulation simulation) {
-		return component.takeStack(0, maxAmount, actionForSim(simulation)); //TODO: fix
+		return component.removeStack(0, maxAmount, actionForSim(simulation)); //TODO: fix
 	}
 
 	@Override
