@@ -64,8 +64,8 @@ public class UniversalComponentsMixinPlugin implements IMixinConfigPlugin {
 		ImmutableMap.Builder<String, Set<String>> builder = ImmutableMap.builder();
 //		builder.put("vanilla.MixinBlock", Collections.singleton("cardinal-components-block")); //only inject if block components exist?
 		builder.put("vanilla.MixinHopperBlockEntity", Collections.singleton("cardinal-components-entity")); //only inject if entity components exist
-		builder.put("lba.MixinItemAttributesBlock", ImmutableSet.of("cardinal-components-block", "libblockattributes_item")); //only inject if both block components and LBA exist
-		builder.put("lba.MixinItemAttributesItem", ImmutableSet.of("cardinal-components-item", "libblockattributes_item")); //only inject if both item components and LBA exist
+		builder.put("lba.MixinItemAttributesBlock", ImmutableSet.of("cardinal-components-block", "libblockattributes_items")); //only inject if both block components and LBA exist
+		builder.put("lba.MixinItemAttributesItem", ImmutableSet.of("cardinal-components-item", "libblockattributes_items")); //only inject if both item components and LBA exist
 
 		HOOKS = builder.build();
 	}
