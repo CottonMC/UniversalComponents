@@ -48,7 +48,7 @@ dependencies {
 	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}"
 
 	//lib block attributes
-	modImplementation "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
+	modCompileOnly "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
 
 	//fluidity
 	modCompileOnly("grondag:fluidity-mc116:${project.fluidity_version}.+") { transitive = false }

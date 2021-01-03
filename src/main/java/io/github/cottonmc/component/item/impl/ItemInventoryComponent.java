@@ -1,10 +1,8 @@
 package io.github.cottonmc.component.item.impl;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.item.InventoryComponent;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import nerdhub.cardinal.components.api.util.ItemComponent;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.Objects;

@@ -1,12 +1,9 @@
 package io.github.cottonmc.component.fluid.impl;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import nerdhub.cardinal.components.api.util.ItemComponent;
 import net.minecraft.nbt.CompoundTag;
 
 public class ItemTankComponent extends SimpleTankComponent {

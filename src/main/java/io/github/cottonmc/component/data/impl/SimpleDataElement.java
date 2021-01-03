@@ -6,7 +6,6 @@ import io.github.cottonmc.component.data.api.Unit;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,7 +118,8 @@ public class SimpleDataElement implements DataElement {
 	}
 
 	@Override
-    public @NotNull Unit getBarUnit() {
+	@Nullable
+	public Unit getBarUnit() {
 		return barUnit;
 	}
 
@@ -129,7 +129,8 @@ public class SimpleDataElement implements DataElement {
 	}
 
 	@Override
-	public @NotNull ImmutableList<ItemStack> getInventory() {
+	@Nullable
+	public ImmutableList<ItemStack> getInventory() {
 		return inventory;
 	}
 
