@@ -24,6 +24,12 @@
     "cardinal-components-base": "*"
   },
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "cardinal-components": [
+      "universalcomponents:inventory",
+      "universalcomponents:tank",
+      "universalcomponents:capacitor",
+      "universalcomponents:data_provider"
+    ]
   }
 }

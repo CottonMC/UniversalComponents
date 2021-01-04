@@ -79,12 +79,11 @@ public class WrappedEnergyHandler implements CapacitorComponent {
 	}
 
 	@Override
-	public void fromTag(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag) {
 
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		return tag;
+	public void writeToNbt(CompoundTag tag) {
 	}
 }

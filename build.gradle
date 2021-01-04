@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "fabric-loom" version "0.4-SNAPSHOT"
+	id "fabric-loom" version "0.5-SNAPSHOT"
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "4.9.0"
 }
@@ -26,14 +26,8 @@ repositories {
 	maven { url "http://maven.fabricmc.net/" } // Fabric maven - home of Fabric API and ModMenu
 	maven { url "https://server.bbkr.space/artifactory/libs-release" } // Cotton maven - home of Cotton projects
 	maven { url "https://dl.bintray.com/ladysnake/libs" } // Onyx Studios maven - home of Cardinal Components
-	maven { url "https://mod-buildcraft.com/maven" } // Buildcraft maven - home of Lib Block Attributes
-	maven {
-		url = "https://grondag-repo.appspot.com" //Grondag's maven - home of Fluidity
-		credentials {
-			username "guest"
-			password ""
-		}
-	}
+	maven { url "https://alexiil.uk/maven/" } // Alexiil's maven - home of Lib Block Attributes
+	maven { url "https://maven.dblsaiko.net/" } //Grondag's maven - home of Fluidity
 	maven { url "https://jitpack.io" }
 }
 
