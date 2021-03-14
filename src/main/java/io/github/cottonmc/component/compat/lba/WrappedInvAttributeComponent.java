@@ -143,7 +143,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	@Override
 	public Inventory asInventory() {
-		//INFO: This is a very bad temporary fix. Correct it later!
+		//INFO: This is a very bad temporary fix. Correct it later! Wasn't runable without this.
 		System.out.println("If you ever see this things have most likely gone wrong!");
 		System.out.println("Compatibility with LBA is not granted at the moment!");
 		return new InventoryFixedWrapper(inv) {
