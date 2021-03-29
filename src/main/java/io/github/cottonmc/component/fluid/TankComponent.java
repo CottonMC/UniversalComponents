@@ -39,7 +39,7 @@ public interface TankComponent extends Component, Observable {
 
 	boolean canExtract(int tank);
 
-	FluidVolume takeFluid(int tank, Fraction amount, ActionType action);
+	FluidVolume removeFluid(int tank, Fraction amount, ActionType action);
 
 	FluidVolume removeFluid(int tank, ActionType action);
 
