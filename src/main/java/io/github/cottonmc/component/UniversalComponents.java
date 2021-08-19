@@ -1,6 +1,8 @@
 package io.github.cottonmc.component;
 
 import com.mojang.serialization.Lifecycle;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.github.cottonmc.component.api.IntegrationHandler;
 import io.github.cottonmc.component.compat.tr.RebornEnergyTypes;
 import io.github.cottonmc.component.data.DataProviderComponent;
@@ -10,8 +12,6 @@ import io.github.cottonmc.component.energy.type.EnergyTypes;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.mixin.vanilla.RegistryAccessor;
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
@@ -28,19 +28,19 @@ public class UniversalComponents implements ModInitializer {
 	/**
 	 * An item-handling component, so you can handle inventory with all your other components.
 	 */
-	public static final ComponentType<InventoryComponent> INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "inventory"), InventoryComponent.class);
+	public static final ComponentKey<InventoryComponent> INVENTORY_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(MODID, "inventory"), InventoryComponent.class);
 	/**
 	 * A fluid-handling component, for dealing with fluid volumes.
 	 */
-	public static final ComponentType<TankComponent> TANK_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "tank"), TankComponent.class);
+	public static final ComponentKey<TankComponent> TANK_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(MODID, "tank"), TankComponent.class);
 	/**
 	 * An energy-handling component,
 	 */
-	public static final ComponentType<CapacitorComponent> CAPACITOR_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "capacitor"), CapacitorComponent.class);
+	public static final ComponentKey<CapacitorComponent> CAPACITOR_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(MODID, "capacitor"), CapacitorComponent.class);
 	/**
 	 * A component for providing structured data, for use with automation or HUDs.
 	 */
-	public static final ComponentType<DataProviderComponent> DATA_PROVIDER_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(MODID, "data_provider"), DataProviderComponent.class);
+	public static final ComponentKey<DataProviderComponent> DATA_PROVIDER_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(MODID, "data_provider"), DataProviderComponent.class);
 
 	public static final RegistryKey<Registry<EnergyType>> ENERGY_TYPES_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(MODID, "energy_types"));
 	public static final Registry<EnergyType> ENERGY_TYPES = RegistryAccessor.create(ENERGY_TYPES_REGISTRY_KEY, new DefaultedRegistry<>(new Identifier(MODID, "ultra_low_voltage").toString(), ENERGY_TYPES_REGISTRY_KEY, Lifecycle.stable()), () -> EnergyTypes.ULTRA_LOW_VOLTAGE, Lifecycle.stable());

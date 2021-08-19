@@ -4,7 +4,7 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.Observable;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.Component;
+import dev.onyxstudios.cca.api.v3.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundTag;
@@ -87,7 +87,7 @@ public interface TankComponent extends Component, Observable {
 	}
 
 	@Override
-	default void fromTag(CompoundTag tag) {
+	default void readFromNbt(CompoundTag tag) {
 		clear();
 		ListTag contents = tag.getList("Contents", NbtType.COMPOUND);
 		for (int i = 0; i < contents.size(); i++) {
@@ -97,13 +97,12 @@ public interface TankComponent extends Component, Observable {
 	}
 
 	@Override
-	default CompoundTag toTag(CompoundTag tag) {
+	default void writeToNbt(CompoundTag tag) {
 		ListTag contents = new ListTag();
 		for (FluidVolume vol : getAllContents()) {
 			contents.add(vol.toTag(new CompoundTag()));
 		}
 		tag.put("Contents", contents);
-		return tag;
 	}
 
 }

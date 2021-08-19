@@ -124,7 +124,7 @@ public class SimpleCapacitorComponent implements CapacitorComponent {
 	}
 
 	@Override
-	public void fromTag(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag) {
 		currentEnergy = tag.getInt("Energy");
 		maxEnergy = tag.getInt("MaxEnergy");
 		if (tag.contains("Harm", NbtType.NUMBER)) {
@@ -133,10 +133,9 @@ public class SimpleCapacitorComponent implements CapacitorComponent {
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putInt("Energy", currentEnergy);
 		tag.putInt("MaxEnergy", maxEnergy);
 		tag.putInt("Harm", harm);
-		return tag;
 	}
 }

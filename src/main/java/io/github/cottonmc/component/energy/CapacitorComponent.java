@@ -1,10 +1,10 @@
 package io.github.cottonmc.component.energy;
 
+import dev.onyxstudios.cca.api.v3.component.Component;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.Observable;
 import io.github.cottonmc.component.energy.event.PowerGenCallback;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
