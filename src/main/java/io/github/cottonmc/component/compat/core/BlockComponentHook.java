@@ -1,5 +1,6 @@
 package io.github.cottonmc.component.compat.core;
 
+import dev.onyxstudios.cca.api.v3.block.BlockComponents;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.CapacitorComponentHelper;
@@ -7,7 +8,6 @@ import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -31,35 +31,35 @@ public class BlockComponentHook implements InventoryComponentHelper.BlockInvento
 
 	@Override
 	public boolean hasInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).hasComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.INVENTORY_COMPONENT, world, pos, dir) != null;
 	}
 
 	@Override
 	@Nullable
 	public InventoryComponent getInvComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).getComponent(world, pos, UniversalComponents.INVENTORY_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.INVENTORY_COMPONENT, world, pos, dir);
 	}
 
 	@Override
 	public boolean hasTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).hasComponent(world, pos, UniversalComponents.TANK_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.TANK_COMPONENT, world, pos, dir) != null;
 	}
 
 	@Nullable
 	@Override
 	public TankComponent getTankComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).getComponent(world, pos, UniversalComponents.TANK_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.TANK_COMPONENT, world, pos, dir);
 	}
 
 	@Override
 	public boolean hasCapComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).hasComponent(world, pos, UniversalComponents.CAPACITOR_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.CAPACITOR_COMPONENT, world, pos, dir) != null;
 	}
 
 	@Nullable
 	@Override
 	public CapacitorComponent getCapComponent(BlockView world, BlockPos pos, @Nullable Direction dir) {
-		return BlockComponentProvider.get(world.getBlockState(pos)).getComponent(world, pos, UniversalComponents.CAPACITOR_COMPONENT, dir);
+		return BlockComponents.get(UniversalComponents.CAPACITOR_COMPONENT, world, pos, dir);
 	}
 
 	@Override

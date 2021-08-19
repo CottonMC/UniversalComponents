@@ -6,7 +6,7 @@ import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.InventoryComponentHelper;
-import nerdhub.cardinal.components.api.component.Component;
+import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
