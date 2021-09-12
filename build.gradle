@@ -40,7 +40,7 @@ dependencies {
 
 	//cardinal components
 	include modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") //only non-fabricmc lib we actually require at runtime
-	include modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
+	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}"
 	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
 	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 	modCompileOnly "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
@@ -54,10 +54,10 @@ dependencies {
 	modCompileOnly("grondag:fluidity-mc116:${project.fluidity_version}.+") { transitive = false }
 
 	//item inventory
-	include modImplementation("com.github.emilyploszaj:item-inventory:${project.item_inventory_version}")
+	modCompileOnly "com.github.emilyploszaj:item-inventory:${project.item_inventory_version}"
 
 	//techreborn energy
-	include modImplementation("teamreborn:energy:${tr_energy_version}")
+	modCompileOnly "teamreborn:energy:${tr_energy_version}"
 }
 
 processResources {
