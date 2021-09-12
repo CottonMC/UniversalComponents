@@ -143,61 +143,10 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 
 	@Override
 	public Inventory asInventory() {
-		//INFO: This is a very bad temporary fix. Correct it later! Wasn't runable without this.
-		System.out.println("If you ever see this things have most likely gone wrong!");
-		System.out.println("Compatibility with LBA is not granted at the moment!");
 		return new InventoryFixedWrapper(inv) {
 			@Override
 			public boolean canPlayerUse(PlayerEntity player) {
 				return true;
-			}
-
-			@Override
-			public ItemStack getStack(int slot) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public boolean isEmpty() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public void markDirty() {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public ItemStack removeStack(int slot) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public ItemStack removeStack(int slot, int amount) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public void setStack(int slot, ItemStack stack) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public int size() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
-			@Override
-			public void clear() {
-				// TODO Auto-generated method stub
-
 			}
 		};
 	}
