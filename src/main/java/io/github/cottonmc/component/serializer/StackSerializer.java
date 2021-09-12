@@ -2,13 +2,13 @@ package io.github.cottonmc.component.serializer;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class StackSerializer {
 	//allows int amounts
-	public static CompoundTag toTag(ItemStack stack, CompoundTag tag) {
+	public static NbtCompound toTag(ItemStack stack, NbtCompound tag) {
 		Identifier identifier = Registry.ITEM.getId(stack.getItem());
 		tag.putString("id", identifier == null ? "minecraft:air" : identifier.toString());
 		tag.putInt("Count", stack.getCount());
@@ -20,7 +20,7 @@ public class StackSerializer {
 	}
 
 	//allows int amounts
-	public static ItemStack fromTag(CompoundTag tag) {
+	public static ItemStack fromTag(NbtCompound tag) {
 		Item item = Registry.ITEM.get(new Identifier(tag.getString("id")));
 		int count = tag.getInt("Count");
 		ItemStack ret = new ItemStack(item, count);

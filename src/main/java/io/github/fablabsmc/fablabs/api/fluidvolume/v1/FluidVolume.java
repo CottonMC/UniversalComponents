@@ -4,7 +4,7 @@ import io.github.cottonmc.component.UniversalComponents;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -17,7 +17,7 @@ public final class FluidVolume {
 
 	private Fluid fluid;
 	private Fraction amount;
-	private CompoundTag tag;
+	private NbtCompound tag;
 
 	private boolean empty;
 
@@ -31,7 +31,7 @@ public final class FluidVolume {
 		this.updateEmptyState();
 	}
 
-	private FluidVolume(CompoundTag tag) {
+	private FluidVolume(NbtCompound tag) {
 		fluid = Registry.FLUID.get(new Identifier(tag.getString("Id")));
 		amount = Fraction.CODEC.parse(NbtOps.INSTANCE, tag.getCompound("Amount")).resultOrPartial(UniversalComponents.logger::error).orElse(Fraction.ZERO);
 
@@ -99,19 +99,19 @@ public final class FluidVolume {
 		return !empty && tag != null && !tag.isEmpty();
 	}
 
-	public CompoundTag getTag() {
+	public NbtCompound getTag() {
 		return tag;
 	}
 
-	public CompoundTag getOrCreateTag() {
+	public NbtCompound getOrCreateTag() {
 		if (tag == null) {
-			tag = new CompoundTag();
+			tag = new NbtCompound();
 		}
 
 		return tag;
 	}
 
-	public void setTag(CompoundTag tag) {
+	public void setTag(NbtCompound tag) {
 		this.tag = tag;
 	}
 
@@ -122,14 +122,14 @@ public final class FluidVolume {
 		return stack;
 	}
 
-	public static FluidVolume fromTag(CompoundTag tag) {
+	public static FluidVolume fromTag(NbtCompound tag) {
 		return new FluidVolume(tag);
 	}
 
-	public CompoundTag toTag(CompoundTag tag) {
+	public NbtCompound toTag(NbtCompound tag) {
 		tag.putString("Id", Registry.FLUID.getId(getFluid()).toString());
 
-		tag.put("Amount", Fraction.CODEC.encodeStart(NbtOps.INSTANCE, amount).resultOrPartial(UniversalComponents.logger::error).orElseGet(CompoundTag::new));
+		tag.put("Amount", Fraction.CODEC.encodeStart(NbtOps.INSTANCE, amount).resultOrPartial(UniversalComponents.logger::error).orElseGet(NbtCompound::new));
 
 		if (this.tag != null) {
 			tag.put("Tag", this.tag.copy());

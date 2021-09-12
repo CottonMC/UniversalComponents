@@ -4,7 +4,7 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -124,7 +124,7 @@ public class SimpleCapacitorComponent implements CapacitorComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(NbtCompound tag) {
 		currentEnergy = tag.getInt("Energy");
 		maxEnergy = tag.getInt("MaxEnergy");
 		if (tag.contains("Harm", NbtType.NUMBER)) {
@@ -133,7 +133,7 @@ public class SimpleCapacitorComponent implements CapacitorComponent {
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(NbtCompound tag) {
 		tag.putInt("Energy", currentEnergy);
 		tag.putInt("MaxEnergy", maxEnergy);
 		tag.putInt("Harm", harm);

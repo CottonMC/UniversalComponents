@@ -11,8 +11,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
@@ -200,20 +200,20 @@ public interface InventoryComponent extends Component, Observable {
 	}
 
 	@Override
-	default void readFromNbt(CompoundTag tag) {
+	default void readFromNbt(NbtCompound tag) {
 		clear();
-		ListTag items = tag.getList("Items", NbtType.COMPOUND);
+		NbtList items = tag.getList("Items", NbtType.COMPOUND);
 		for (int i = 0; i < items.size(); i++) {
-			CompoundTag stackTag = (CompoundTag) items.get(i);
+			NbtCompound stackTag = (NbtCompound) items.get(i);
 			setStack(i, StackSerializer.fromTag(stackTag));
 		}
 	}
 
 	@Override
-	default void writeToNbt(CompoundTag tag) {
-		ListTag items = new ListTag();
+	default void writeToNbt(NbtCompound tag) {
+		NbtList items = new NbtList();
 		for (ItemStack stack : getStacks()) {
-			items.add(StackSerializer.toTag(stack, new CompoundTag()));
+			items.add(StackSerializer.toTag(stack, new NbtCompound()));
 		}
 		tag.put("Items", items);
 	}

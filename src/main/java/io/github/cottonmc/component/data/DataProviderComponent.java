@@ -3,7 +3,7 @@ package io.github.cottonmc.component.data;
 import io.github.cottonmc.component.data.api.DataElement;
 import io.github.cottonmc.component.data.api.Unit;
 import dev.onyxstudios.cca.api.v3.component.Component;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,8 +35,8 @@ public interface DataProviderComponent extends Component {
 	DataElement getElementFor(Unit unit);
 
 	@Override
-	default void readFromNbt(CompoundTag tag) { }
+	default void readFromNbt(NbtCompound tag) { }
 
 	@Override
-	default void writeToNbt(CompoundTag tag) { }
+	default void writeToNbt(NbtCompound tag) { }
 }
