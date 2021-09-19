@@ -92,7 +92,7 @@ public interface TankComponent extends Component, Observable {
 		NbtList contents = tag.getList("Contents", NbtType.COMPOUND);
 		for (int i = 0; i < contents.size(); i++) {
 			NbtCompound volTag = (NbtCompound)contents.get(i);
-			setFluid(i, FluidVolume.fromTag(volTag));
+			setFluid(i, FluidVolume.fromNbt(volTag));
 		}
 	}
 
@@ -100,7 +100,7 @@ public interface TankComponent extends Component, Observable {
 	default void writeToNbt(NbtCompound tag) {
 		NbtList contents = new NbtList();
 		for (FluidVolume vol : getAllContents()) {
-			contents.add(vol.toTag(new NbtCompound()));
+			contents.add(vol.toNbt(new NbtCompound()));
 		}
 		tag.put("Contents", contents);
 	}
