@@ -4,7 +4,7 @@ import io.github.cottonmc.component.UniversalComponents;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -17,7 +17,7 @@ public final class FluidVolume {
 
 	private Fluid fluid;
 	private Fraction amount;
-	private CompoundTag tag;
+	private NbtCompound nbt;
 
 	private boolean empty;
 
@@ -31,12 +31,12 @@ public final class FluidVolume {
 		this.updateEmptyState();
 	}
 
-	private FluidVolume(CompoundTag tag) {
-		fluid = Registry.FLUID.get(new Identifier(tag.getString("Id")));
-		amount = Fraction.CODEC.parse(NbtOps.INSTANCE, tag.getCompound("Amount")).resultOrPartial(UniversalComponents.logger::error).orElse(Fraction.ZERO);
+	private FluidVolume(NbtCompound nbt) {
+		fluid = Registry.FLUID.get(new Identifier(nbt.getString("Id")));
+		amount = Fraction.CODEC.parse(NbtOps.INSTANCE, nbt.getCompound("Amount")).resultOrPartial(UniversalComponents.logger::error).orElse(Fraction.ZERO);
 
-		if (tag.contains("Tag", NbtType.COMPOUND)) {
-			this.tag = tag.getCompound("Tag");
+		if (nbt.contains("Nbt", NbtType.COMPOUND)) {
+			this.nbt = nbt.getCompound("Nbt");
 		}
 
 		this.updateEmptyState();
@@ -95,46 +95,46 @@ public final class FluidVolume {
 		empty = isEmpty();
 	}
 
-	public boolean hasTag() {
-		return !empty && tag != null && !tag.isEmpty();
+	public boolean hasNbt() {
+		return !empty && nbt != null && !nbt.isEmpty();
 	}
 
-	public CompoundTag getTag() {
-		return tag;
+	public NbtCompound getNbt() {
+		return nbt;
 	}
 
-	public CompoundTag getOrCreateTag() {
-		if (tag == null) {
-			tag = new CompoundTag();
+	public NbtCompound getOrCreateNbt() {
+		if (nbt == null) {
+			nbt = new NbtCompound();
 		}
 
-		return tag;
+		return nbt;
 	}
 
-	public void setTag(CompoundTag tag) {
-		this.tag = tag;
+	public void setNbt(NbtCompound nbt) {
+		this.nbt = nbt;
 	}
 
 	public FluidVolume copy() {
 		if (this.isEmpty()) return FluidVolume.EMPTY;
 		FluidVolume stack = new FluidVolume(this.fluid, this.amount);
-		if (this.hasTag()) stack.setTag(this.getTag());
+		if (this.hasNbt()) stack.setNbt(this.getNbt());
 		return stack;
 	}
 
-	public static FluidVolume fromTag(CompoundTag tag) {
-		return new FluidVolume(tag);
+	public static FluidVolume fromNbt(NbtCompound nbt) {
+		return new FluidVolume(nbt);
 	}
 
-	public CompoundTag toTag(CompoundTag tag) {
-		tag.putString("Id", Registry.FLUID.getId(getFluid()).toString());
+	public NbtCompound toNbt(NbtCompound nbt) {
+		nbt.putString("Id", Registry.FLUID.getId(getFluid()).toString());
 
-		tag.put("Amount", Fraction.CODEC.encodeStart(NbtOps.INSTANCE, amount).resultOrPartial(UniversalComponents.logger::error).orElseGet(CompoundTag::new));
+		nbt.put("Amount", Fraction.CODEC.encodeStart(NbtOps.INSTANCE, amount).resultOrPartial(UniversalComponents.logger::error).orElseGet(NbtCompound::new));
 
-		if (this.tag != null) {
-			tag.put("Tag", this.tag.copy());
+		if (this.nbt != null) {
+			nbt.put("Nbt", this.nbt.copy());
 		}
 
-		return tag;
+		return nbt;
 	}
 }

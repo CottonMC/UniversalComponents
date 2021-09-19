@@ -21,7 +21,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return inv.getInvSize(holderStack);
 	}
 
@@ -55,7 +55,7 @@ public class WrappedItemInventory implements InventoryComponent {
 	}
 
 	@Override
-	public ItemStack takeStack(int slot, int amount, ActionType action) {
+	public ItemStack removeStack(int slot, int amount, ActionType action) {
 		ItemStack original = inv.getStack(holderStack, slot).copy();
 		ItemStack ret = inv.getStack(holderStack, slot).split(amount);
 		if (!action.shouldPerform()) {

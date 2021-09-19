@@ -3,7 +3,7 @@ package io.github.cottonmc.component.compat.tr;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
 import team.reborn.energy.EnergyHandler;
 
@@ -79,11 +79,11 @@ public class WrappedEnergyHandler implements CapacitorComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(NbtCompound tag) {
 
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(NbtCompound tag) {
 	}
 }

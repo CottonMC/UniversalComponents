@@ -31,7 +31,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return view.getSlotCount();
 	}
 
@@ -72,7 +72,7 @@ public class WrappedInvAttributeComponent implements InventoryComponent {
 	}
 
 	@Override
-	public ItemStack takeStack(int slot, int amount, ActionType action) {
+	public ItemStack removeStack(int slot, int amount, ActionType action) {
 		return extractable.attemptExtraction(createFilterForSlot(slot), amount, simForAction(action));
 	}
 

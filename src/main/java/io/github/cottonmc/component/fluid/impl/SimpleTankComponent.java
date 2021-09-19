@@ -53,7 +53,7 @@ public class SimpleTankComponent implements TankComponent {
 	}
 
 	@Override
-	public FluidVolume takeFluid(int slot, Fraction amount, ActionType action) {
+	public FluidVolume removeFluid(int slot, Fraction amount, ActionType action) {
 		FluidVolume vol = contents.get(slot);
 		if (!action.shouldPerform()) {
 			vol = vol.copy();

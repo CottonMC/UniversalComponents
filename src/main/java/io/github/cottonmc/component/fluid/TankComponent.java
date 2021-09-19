@@ -7,8 +7,8 @@ import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +39,7 @@ public interface TankComponent extends Component, Observable {
 
 	boolean canExtract(int tank);
 
-	FluidVolume takeFluid(int tank, Fraction amount, ActionType action);
+	FluidVolume removeFluid(int tank, Fraction amount, ActionType action);
 
 	FluidVolume removeFluid(int tank, ActionType action);
 
@@ -87,20 +87,20 @@ public interface TankComponent extends Component, Observable {
 	}
 
 	@Override
-	default void readFromNbt(CompoundTag tag) {
+	default void readFromNbt(NbtCompound tag) {
 		clear();
-		ListTag contents = tag.getList("Contents", NbtType.COMPOUND);
+		NbtList contents = tag.getList("Contents", NbtType.COMPOUND);
 		for (int i = 0; i < contents.size(); i++) {
-			CompoundTag volTag = (CompoundTag)contents.get(i);
-			setFluid(i, FluidVolume.fromTag(volTag));
+			NbtCompound volTag = (NbtCompound)contents.get(i);
+			setFluid(i, FluidVolume.fromNbt(volTag));
 		}
 	}
 
 	@Override
-	default void writeToNbt(CompoundTag tag) {
-		ListTag contents = new ListTag();
+	default void writeToNbt(NbtCompound tag) {
+		NbtList contents = new NbtList();
 		for (FluidVolume vol : getAllContents()) {
-			contents.add(vol.toTag(new CompoundTag()));
+			contents.add(vol.toNbt(new NbtCompound()));
 		}
 		tag.put("Contents", contents);
 	}

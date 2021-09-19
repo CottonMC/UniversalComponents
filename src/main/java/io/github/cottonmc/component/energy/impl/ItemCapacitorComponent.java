@@ -1,13 +1,12 @@
 package io.github.cottonmc.component.energy.impl;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
-public class ItemCapacitorComponent extends SimpleCapacitorComponent implements Component {
+public class ItemCapacitorComponent extends SimpleCapacitorComponent {
 	private ComponentKey<CapacitorComponent> key;
 
 	public ItemCapacitorComponent(int maxEnergy, EnergyType type) {
@@ -24,8 +23,8 @@ public class ItemCapacitorComponent extends SimpleCapacitorComponent implements 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ItemCapacitorComponent that = (ItemCapacitorComponent) o;
-		CompoundTag tag = new CompoundTag();
-		CompoundTag tag1 = new CompoundTag();
+		NbtCompound tag = new NbtCompound();
+		NbtCompound tag1 = new NbtCompound();
 		that.writeToNbt(tag);
 		this.writeToNbt(tag1);
 		return tag1.equals(tag1);
